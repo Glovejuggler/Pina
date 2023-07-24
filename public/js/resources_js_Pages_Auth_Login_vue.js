@@ -268,8 +268,8 @@ var __default__ = {
     var __expose = _ref.expose;
     __expose();
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_6__.useForm)({
-      email: '',
-      password: '',
+      email: 'admin@admin.com',
+      password: 'admin123',
       remember: false
     });
     var submit = function submit() {
