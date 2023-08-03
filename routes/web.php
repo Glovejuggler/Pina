@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\SaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,5 +39,8 @@ Route::post('/items/store', [ItemController::class, 'store'])->name('items.store
 Route::post('/items/{item}/update', [ItemController::class, 'update'])->name('items.update');
 Route::delete('/items/{item}/delete', [ItemController::class, 'destroy'])->name('items.destroy');
 Route::post('/item/count/edit', [ItemController::class, 'setCount'])->name('items.setCount');
+
+Route::get('sales', [SaleController::class, 'index'])->name('items.sales');
+Route::post('item/{item}/sale', [SaleController::class, 'store'])->name('sales.store');
 
 require __DIR__.'/auth.php';

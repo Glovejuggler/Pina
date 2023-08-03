@@ -19299,6 +19299,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Items")];
     }),
     _: 1 /* STABLE */
+  }, 8 /* PROPS */, ["href", "class"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+    href: _ctx.route('items.sales'),
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out", _ctx.$page.component === 'Items/Sales' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'])
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sales")];
+    }),
+    _: 1 /* STABLE */
   }, 8 /* PROPS */, ["href", "class"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("nav", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Primary Navigation Menu "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Settings Dropdown "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeDropdown"], {
     align: "right",
     width: "48"
@@ -44178,6 +44186,10 @@ var map = {
 		"./resources/js/Pages/Items/Index.vue",
 		"resources_js_Pages_Items_Index_vue"
 	],
+	"./Items/Sales.vue": [
+		"./resources/js/Pages/Items/Sales.vue",
+		"resources_js_Pages_Items_Sales_vue"
+	],
 	"./Welcome.vue": [
 		"./resources/js/Pages/Welcome.vue",
 		"resources_js_Pages_Welcome_vue"
@@ -44331,7 +44343,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_vue":1,"resources_js_Pages_Auth_ForgotPassword_vue":1,"resources_js_Pages_Auth_Login_vue":1,"resources_js_Pages_Auth_Register_vue":1,"resources_js_Pages_Auth_ResetPassword_vue":1,"resources_js_Pages_Auth_VerifyEmail_vue":1,"resources_js_Pages_Dashboard_vue":1,"resources_js_Pages_Items_Index_vue":1,"resources_js_Pages_Welcome_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_vue":1,"resources_js_Pages_Auth_ForgotPassword_vue":1,"resources_js_Pages_Auth_Login_vue":1,"resources_js_Pages_Auth_Register_vue":1,"resources_js_Pages_Auth_ResetPassword_vue":1,"resources_js_Pages_Auth_VerifyEmail_vue":1,"resources_js_Pages_Dashboard_vue":1,"resources_js_Pages_Items_Index_vue":1,"resources_js_Pages_Items_Sales_vue":1,"resources_js_Pages_Welcome_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

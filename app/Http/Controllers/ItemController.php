@@ -40,6 +40,10 @@ class ItemController extends Controller
      */
     public function setCount(Request $request)
     {
+        if ($request->count < 0) {
+            return redirect()->back();
+        }
+
         $item = $request->item;
 
         $tally = Tally::where('item_id', $item['id'])->first();

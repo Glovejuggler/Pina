@@ -28,7 +28,7 @@ class StoreItemRequest extends FormRequest
             'name' => 'required',
             'description' => 'nullable',
             'price' => 'numeric|required',
-            'code' => 'nullable',
+            'code' => 'required',
         ];
     }
 }

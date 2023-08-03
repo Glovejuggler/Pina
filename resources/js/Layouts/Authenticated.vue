@@ -20,6 +20,10 @@ const showingNavigationDropdown = ref(false);
                     class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out"
                     :class="$page.component === 'Items/Index' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'">
                 Items</Link>
+                <Link :href="route('items.sales')"
+                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out"
+                    :class="$page.component === 'Items/Sales' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'">
+                Sales</Link>
             </div>
         </div>
         <div class="min-h-screen bg-gray-100 pl-64">

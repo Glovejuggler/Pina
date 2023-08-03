@@ -53,19 +53,21 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = {
   "class": "max-w-screen-2xl mx-auto py-6"
 };
-var _hoisted_2 = {
-  "class": "bg-white rounded-lg w-1/4 p-4"
-};
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "font-bold"
 }, " Items ", -1 /* HOISTED */);
-var _hoisted_4 = {
+var _hoisted_3 = {
   "class": "flex justify-end font-bold text-7xl"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Head"], {
     title: "Dashboard"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.items), 1 /* TEXT */)])])], 64 /* STABLE_FRAGMENT */);
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    onClick: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.$inertia.get(_ctx.route('items.index'));
+    }),
+    "class": "bg-white rounded-lg w-1/4 p-4 cursor-pointer hover:-translate-y-1 hover:shadow-lg duration-200 ease-in-out"
+  }, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.items), 1 /* TEXT */)])])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

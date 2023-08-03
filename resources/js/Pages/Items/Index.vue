@@ -10,9 +10,12 @@ import pickBy from 'lodash/pickBy';
 const showNewItemModal = ref(false)
 const showEditItemModal = ref(false)
 const showDeleteItemModal = ref(false)
+const showSellItemModal = ref(false)
 const editItem = ref('')
 const deleteItem = ref('')
+const sellItem = ref('')
 const imgTmp = ref('')
+const view = ref(localStorage.getItem('view') || 'list')
 
 const props = defineProps({
     items: Object,
@@ -34,6 +37,10 @@ const editForm = useForm({
     description: '',
     price: '',
     code: '',
+})
+
+const sellForm = useForm({
+    discount: ''
 })
 
 const updateNewImage = () => {
@@ -79,10 +86,35 @@ const itemDelete = (item) => {
     showDeleteItemModal.value = true
 }
 
+const itemSell = (item) => {
+    if (item.tally.number > 0) {
+        sellItem.value = item
+        showSellItemModal.value = true
+    }
+}
+
 const form = ref({
     search: props.filters.search
 })
 
+const currency = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'PHP'
+})
+
+const toggleView = () => {
+    if (view.value) {
+        if (view.value === 'list') {
+            view.value = 'grid'
+        } else {
+            view.value = 'list'
+        }
+
+        localStorage.setItem('view', view.value)
+    }
+}
+
+// Watchers
 watch(
     form,
     value => {
@@ -137,9 +169,12 @@ watch(
         Items
     </title>
 
+    <!-- Items -->
     <div class="max-w-screen-2xl py-6 mx-auto">
         <div class="flex justify-between">
-            <span class="font-bold text-lg">Items</span>
+            <span class="font-bold text-lg">Items<i @click="toggleView"
+                    class="bx ml-3 hover:bg-black/20 h-8 w-8 inline-flex justify-center items-center rounded-full text-xl cursor-pointer"
+                    :class="view === 'list' ? 'bx-list-ul' : 'bxs-card'"></i></span>
             <div>
                 <label class="relative block">
                     <i class='bx bx-search dark:text-white/20 absolute inset-y-0 left-0 flex items-center pl-3'></i>
@@ -153,76 +188,127 @@ watch(
                     v-wave>Add</button>
             </div>
         </div>
-        <div class="bg-white rounded-lg shadow-sm border mt-4">
-            <div v-if="items.data.length" class="relative overflow-x-auto rounded-lg">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Code
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Description
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Price
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Count
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in items.data" class="bg-white border-b">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ item.code }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ item.name }}
-                            </td>
-                            <td class="px-6 py-4 max-w-md">
-                                {{ item.description }}
-                            </td>
-                            <td class="px-6 py-4">
-                                ₱ {{ item.price.toLocaleString() }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div>
-                                    <button
-                                        class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
-                                        @click="setCount(item, item.tally.number - 1)">-</button>
-                                    <input class="mx-2 w-12 rounded-lg text-xs" type="text" :value="item.tally.number"
-                                        @change="setCount(item, $event.target.value)">
-                                    <button
-                                        class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
-                                        @click="setCount(item, item.tally.number + 1)">+</button>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="space-x-2">
-                                    <button @click="itemEdit(item)"
-                                        class="rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-900 text-white text-xs px-4 py-2">
-                                        Edit
-                                    </button>
-                                    <button @click="itemDelete(item)"
-                                        class="rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-900 text-white text-xs px-4 py-2">
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <template v-if="items.data.length">
+            <!-- List -->
+            <div v-if="view === 'list'" class="bg-white rounded-lg shadow-sm border mt-4">
+                <div v-if="items.data.length" class="relative overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Code
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Price
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Count
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items.data" class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ item.code }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    <!-- <div class="flex items-center space-x-2">
+                                    <img :src="`../storage/${item.image}`" :alt="item.name" class="max-w-10 max-h-10">
+                                    <span>{{ item.name }}</span>
+                                </div> -->
+                                    {{ item.name }}
+                                </td>
+                                <td class="px-6 py-4 max-w-md">
+                                    {{ item.description }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ₱ {{ item.price.toLocaleString() }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div>
+                                        <button
+                                            class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
+                                            @click="setCount(item, item.tally.number - 1)">-</button>
+                                        <input class="mx-2 w-12 rounded-lg text-xs" type="text" :value="item.tally.number"
+                                            @change="setCount(item, $event.target.value)">
+                                        <button
+                                            class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
+                                            @click="setCount(item, item.tally.number + 1)">+</button>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="space-x-2">
+                                        <button @click="itemEdit(item)"
+                                            class="rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-900 text-white text-xs px-4 py-2">
+                                            Edit
+                                        </button>
+                                        <button @click="itemDelete(item)"
+                                            class="rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-900 text-white text-xs px-4 py-2">
+                                            Delete
+                                        </button>
+                                        <button @click="itemSell(item)" :disabled="item.tally.number < 1"
+                                            :class="{ 'opacity-25': item.tally.number < 1 }"
+                                            class="rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-900 text-white text-xs px-4 py-2">
+                                            Sell
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div v-else class="flex items-center justify-center p-5">
-                No data
+
+            <!-- Grid -->
+            <div v-if="view === 'grid'" class="mt-4 grid grid-cols-2 gap-4">
+                <div v-for="item in items.data" class="bg-white rounded-lg p-4 border grid grid-cols-3">
+                    <div class="flex space-x-3">
+                        <div class="flex shrink-0 h-24 w-24 bg-slate-100 rounded-md justify-center items-center">
+                            <img v-if="item.image" :src="`../storage/${item.image}`"
+                                class="max-w-24 max-h-24 object-contain" alt="">
+                            <i v-else class="bx bx-image-alt text-3xl text-slate-900"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="font-semibold">{{ item.name }}</p>
+                            <p class="text-sm">{{ item.code }}</p>
+                            <p class="text-sm text-slate-500 break-words">{{ item.description }}</p>
+                        </div>
+                    </div>
+                    <div class="justify-self-center">
+                        <p>{{ currency.format(item.price) }}</p>
+                        <div class="mt-4">
+                            <button :disabled="item.tally.number === 0" :class="{ 'opacity-25': item.tally.number === 0 }"
+                                class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
+                                @click="setCount(item, item.tally.number - 1)">-</button>
+                            <input class="mx-2 w-12 rounded-lg text-xs" type="text" :value="item.tally.number"
+                                @change="setCount(item, $event.target.value)">
+                            <button
+                                class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
+                                @click="setCount(item, item.tally.number + 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="self-center justify-self-end space-x-2">
+                        <i @click="itemEdit(item)"
+                            class="bx bx-edit inline-flex w-10 h-10 justify-center items-center rounded-full text-lg cursor-pointer hover:bg-green-600/20 hover:text-green-800 duration-300 ease-in-out"></i>
+                        <i @click="itemDelete(item)"
+                            class="bx bx-trash inline-flex w-10 h-10 justify-center items-center rounded-full text-lg cursor-pointer hover:bg-red-600/20 hover:text-red-800 duration-300 ease-in-out"></i>
+                        <i @click="itemSell(item)" :class="{ 'opacity-25': item.tally.number < 1 }"
+                            class="bx bx-shopping-bag inline-flex w-10 h-10 justify-center items-center rounded-full text-lg cursor-pointer hover:bg-blue-600/20 hover:text-blue-800 duration-300 ease-in-out"></i>
+                    </div>
+                </div>
             </div>
+        </template>
+        <div v-else class="flex items-center justify-center p-5">
+            No data
         </div>
         <div class="mt-4 flex justify-end px-4">
             <Pagination :links="items.links" />
@@ -237,7 +323,7 @@ watch(
             <div v-if="showNewItemModal" class="inset-0 fixed z-50 h-screen w-screen flex justify-center items-center"
                 @click.self="showNewItemModal = false">
                 <div
-                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-auto h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto">
+                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-auto h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto shadow-2xl">
                     <span class="font-bold text-lg block mb-2">New Item</span>
                     <form @submit.prevent="newform.post(route('items.store'), {
                         onSuccess: () => {
@@ -282,13 +368,14 @@ watch(
 
                                 <div class="mt-4">
                                     <BreezeLabel for="price" value="Price (₱)" />
-                                    <BreezeInput id="price" type="number" class="mt-1 block w-full"
-                                        v-model="newform.price" />
+                                    <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="newform.price"
+                                        required />
                                 </div>
 
                                 <div class="mt-4">
                                     <BreezeLabel for="code" value="Code" />
-                                    <BreezeInput id="code" type="text" class="mt-1 block w-full" v-model="newform.code" />
+                                    <BreezeInput id="code" type="text" class="mt-1 block w-full" v-model="newform.code"
+                                        required />
                                 </div>
                             </div>
                         </div>
@@ -306,7 +393,7 @@ watch(
         <Transition enter-active-class="duration-200 ease opacity-0" enter-from-class="opacity-0"
             enter-to-class="opacity-100" leave-active-class="duration-200 ease opacity-90" leave-from-class="opacity-90"
             leave-to-class="transform opacity-0" appear>
-            <div v-if="showNewItemModal" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-md"></div>
+            <div v-if="showNewItemModal" class="fixed inset-0 z-40 bg-black/50"></div>
         </Transition>
     </div>
 
@@ -318,7 +405,7 @@ watch(
             <div v-if="showEditItemModal" class="inset-0 fixed z-50 h-screen w-screen flex justify-center items-center"
                 @click.self="showEditItemModal = false">
                 <div
-                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-auto h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto">
+                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-auto h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto shadow-2xl">
                     <span class="font-bold text-lg block mb-2">Edit Item</span>
                     <form enctype="multipart/form-data" @submit.prevent="editForm.post(route('items.update', editItem), {
                         onSuccess: () => {
@@ -389,7 +476,7 @@ watch(
         <Transition enter-active-class="duration-200 ease opacity-0" enter-from-class="opacity-0"
             enter-to-class="opacity-100" leave-active-class="duration-200 ease opacity-90" leave-from-class="opacity-90"
             leave-to-class="transform opacity-0" appear>
-            <div v-if="showEditItemModal" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-md"></div>
+            <div v-if="showEditItemModal" class="fixed inset-0 z-40 bg-black/50"></div>
         </Transition>
     </div>
 
@@ -401,7 +488,7 @@ watch(
             <div v-if="showDeleteItemModal" class="inset-0 fixed z-50 h-screen w-screen flex justify-center items-center"
                 @click.self="showDeleteItemModal = false">
                 <div
-                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-1/4 h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto">
+                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-1/4 h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto shadow-2xl">
                     <span class="font-bold text-lg block mb-2">Confirmation</span>
                     <p>Are you sure you want to delete <span class="font-bold">{{ deleteItem.name }}</span>?</p>
                     <div class="flex justify-end space-x-4 mt-4">
@@ -424,7 +511,65 @@ watch(
         <Transition enter-active-class="duration-200 ease opacity-0" enter-from-class="opacity-0"
             enter-to-class="opacity-100" leave-active-class="duration-200 ease opacity-90" leave-from-class="opacity-90"
             leave-to-class="transform opacity-0" appear>
-            <div v-if="showDeleteItemModal" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-md"></div>
+            <div v-if="showDeleteItemModal" class="fixed inset-0 z-40 bg-black/50"></div>
+        </Transition>
+    </div>
+
+    <!-- Sell Item Modal -->
+    <div>
+        <Transition enter-active-class="duration-200 ease-out" enter-from-class="transform opacity-0 scale-75"
+            enter-to-class="opacity-100 scale-100" leave-active-class="duration-200 ease-out"
+            leave-from-class="opacity-100 scale-100" leave-to-class="transform opacity-0 scale-75">
+            <div v-if="showSellItemModal" class="inset-0 fixed z-50 h-screen w-screen flex justify-center items-center"
+                @click.self="showSellItemModal = false">
+                <div
+                    class="relative bg-white dark:bg-zinc-900 w-full lg:w-1/4 h-auto max-h-[80%] p-6 rounded-lg dark:text-white overflow-auto shadow-2xl">
+                    <span class="font-bold text-lg block mb-2">{{ sellItem.name }}</span>
+                    <form @submit.prevent="sellForm.post(route('sales.store', sellItem), {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            if (!errors.length) {
+                                showSellItemModal = false
+                                sellForm.reset()
+                            } else {
+                                showSellItemModal = true
+                            }
+                        }
+                    })">
+                        <span class="font-bold">Price: </span>{{ currency.format(sellItem.price) }}
+                        <div v-if="sellForm.discount">
+                            <span class="font-bold">Subtotal: </span>{{ currency.format(sellItem.price - sellForm.discount)
+                            }}
+                            <span v-if="Math.round((sellForm.discount / sellItem.price) * 100) > 0"
+                                class="bg-green-500 text-white text-xs rounded-full px-2">{{
+                                    Math.round((sellForm.discount
+                                        /
+                                        sellItem.price) * 100) }}% off</span>
+                        </div>
+                        <div class="mt-4">
+                            <BreezeLabel for="discount" value="Discount" />
+                            <BreezeInput id="discount" type="number" class="mt-1 block w-full" v-model="sellForm.discount"
+                                autofocus />
+                        </div>
+                        <div class="mt-4 flex justify-end space-x-2">
+                            <button type="button" class="hover:underline" @click="showSellItemModal = false">
+                                Cancel
+                            </button>
+                            <button type="submit" :disabled="sellForm.processing"
+                                :class="{ 'opacity-25': sellForm.processing }"
+                                class="rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-900 text-white text-sm px-4 py-2">
+                                Sell
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </Transition>
+        <Transition enter-active-class="duration-200 ease opacity-0" enter-from-class="opacity-0"
+            enter-to-class="opacity-100" leave-active-class="duration-200 ease opacity-90" leave-from-class="opacity-90"
+            leave-to-class="transform opacity-0" appear>
+            <div v-if="showSellItemModal" class="fixed inset-0 z-40 bg-black/50"></div>
         </Transition>
     </div>
 </template>
