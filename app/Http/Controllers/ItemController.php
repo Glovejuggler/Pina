@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Tally;
+use App\Exports\ItemsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreItemRequest;
@@ -53,6 +54,14 @@ class ItemController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    /**
+     * Export
+     */
+    public function export()
+    {
+        return (new ItemsExport)->download('Items.xlsx');
     }
 
     /**

@@ -6,10 +6,8 @@ import { InertiaProgress } from '@inertiajs/progress';
 import Authenticated from '@/Layouts/Authenticated.vue';
 import VWave from 'v-wave';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title}`,
     resolve: async (name) => {
         let page = (await import(`./Pages/${name}.vue`)).default;
 

@@ -26,7 +26,9 @@ class StoreItemRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'brand' => 'required',
             'description' => 'nullable',
+            'cost' => 'numeric|required',
             'price' => 'numeric|required',
             'code' => 'required',
         ];

@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Item;
+use App\Models\Sale;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\Auth\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,17 +33,42 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'items' => Item::all()->count()
+        'items' => Item::all()->count(),
+        'dailyReport' => Sale::whereDate('created_at',now())->exists()
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/items', [ItemController::class, 'index'])->name('items.index');
-Route::post('/items/store', [ItemController::class, 'store'])->name('items.store');
-Route::post('/items/{item}/update', [ItemController::class, 'update'])->name('items.update');
-Route::delete('/items/{item}/delete', [ItemController::class, 'destroy'])->name('items.destroy');
-Route::post('/item/count/edit', [ItemController::class, 'setCount'])->name('items.setCount');
+Route::middleware(['auth'])->group(function () {
+    Route::get('batch/sell', function () {
+        return Inertia::render('BatchSell');
+    })->name('batch.sell');
+    Route::post('sell/batch', [SaleController::class, 'batchSell'])->name('sell.batch');
 
-Route::get('sales', [SaleController::class, 'index'])->name('items.sales');
-Route::post('item/{item}/sale', [SaleController::class, 'store'])->name('sales.store');
+    Route::get('/items', [ItemController::class, 'index'])->name('items.index');
+    Route::post('/items/store', [ItemController::class, 'store'])->name('items.store');
+    Route::post('/items/{item}/update', [ItemController::class, 'update'])->name('items.update');
+    Route::delete('/items/{item}/delete', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::post('/item/count/edit', [ItemController::class, 'setCount'])->name('items.setCount');
+    Route::get('items/export', [ItemController::class, 'export'])->name('items.export');
+
+    Route::get('sales', [SaleController::class, 'index'])->name('items.sales');
+    Route::post('item/{item}/sale', [SaleController::class, 'store'])->name('sales.store');
+    Route::post('check', [SaleController::class, 'check'])->name('check');
+    Route::post('sell', [SaleController::class, 'sell'])->name('sell');
+    Route::get('sales/export/{period?}/{date?}', [SaleController::class, 'export'])->name('sales.export');
+
+    Route::put('user/{user}/update', [UserController::class, 'update'])->name('user.update');
+    Route::put('{user}/password/change', [UserController::class, 'changePassword'])->name('password.change');
+
+    Route::get('settings', function () {
+        return inertia('Settings');
+    })->name('settings');
+
+    Route::get('settings/storage/link', function () {
+        Artisan::call('storage:link');
+
+        return redirect()->back();
+    })->name('storage.link');
+});
 
 require __DIR__.'/auth.php';

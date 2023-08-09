@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Sale;
 use App\Models\Tally;
+use App\Exports\SalesExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SaleController extends Controller
 {
@@ -17,10 +19,18 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        // $sales = Sale::orderBy('created_at', 'desc')->paginate(3);
+        if (!$request->date) {
+            $sales = Sale::orderBy('created_at', 'desc')->paginate(5);
+        } else {
+            $sales = Sale::whereDate('created_at', Carbon::parse($request->date))->orderBy('created_at', 'desc')->paginate(5);
+        }
         // // dd($sales->setCollection($sales->groupBy(function ($q) {
         // //                         return Carbon::parse($q->created_at)->diffForHumans();
         // //                     })));
+
+        // Sale::orderBy('created_at', 'desc')->get()->groupBy(function ($q) {
+        //         return Carbon::parse($q->created_at)->diffForHumans();
+        //     })
 
         // $gSales = $sales->setCollection($sales->groupBy(function ($q) {
         //     return Carbon::parse($q->created_at)->diffForHumans();
@@ -29,12 +39,48 @@ class SaleController extends Controller
         // if ($request->wantsJson()) {
         //     return $gSales;
         // }
+        $period = $request->period;
+
+        if ($period == 'weekly') {
+            $sales->setCollection($sales->groupBy(function ($q) {
+                return Carbon::parse($q->created_at)->startOFWeek(Carbon::SUNDAY)->format('F j, Y').' to '.Carbon::parse($q->created_at)->endOfWeek(Carbon::SATURDAY)->format('F j, Y');
+            }));
+        } elseif ($period == 'monthly') {
+            $sales->setCollection($sales->groupBy(function ($q) {
+                return Carbon::parse($q->created_at)->format('F Y');
+            }));
+        } else {
+            $sales->setCollection($sales->groupBy(function ($q) {
+                return Carbon::parse($q->created_at)->format('F j, Y');
+            }));
+        }
+        
 
         return inertia('Items/Sales', [
-            'sales' => Sale::orderBy('created_at', 'desc')->get()->groupBy(function ($q) {
-                return Carbon::parse($q->created_at)->diffForHumans();
-            })
+            'sales' => $sales->withQueryString(),
+            'filters' => $request->only(['period', 'date'])
         ]);
+    }
+
+    /**
+     * Excel export
+     */
+    public function export($period = null, $date = null)
+    {
+        // dd($period, $date);
+        if ($period && $date) {
+            if ($period == 'weekly') {
+                $titlePrefix = Carbon::parse($date)->startOfWeek(Carbon::SUNDAY)->format('F j, Y').' to '.Carbon::parse($date)->endOfWeek(Carbon::SATURDAY)->format('F j, Y');
+            } elseif ($period == 'monthly') {
+                $titlePrefix = Carbon::parse($date)->format('F Y');
+            } elseif ($period == 'daily') {
+                $titlePrefix = Carbon::parse($date)->format('F j, Y');
+            }
+        } else {
+            $titlePrefix = now()->format('F j, Y');
+        }
+
+        return (new SalesExport)->for($period, $date)->download($titlePrefix.' '.'Sales.xlsx');
     }
 
     /**
@@ -66,6 +112,102 @@ class SaleController extends Controller
         $tally->update([
             'number' => $tally->number - 1
         ]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * 
+     */
+    public function check(Request $request)
+    {
+        // dd($request)
+        $error = null;
+        if (!Item::where('code',$request->code)->exists()) {
+            $error = 'Item does not exist';
+        } elseif(Item::where('code',$request->code)->first()->tally->number < 1) {
+            $error = 'Item does not have stock';
+        }
+
+        if ($error) {
+            return redirect()->back()->withErrors([
+                'item' => $error
+            ]);
+        } else {
+            return redirect()->back()->withErrors([
+                'count' => Item::where('code',$request->code)->first()->tally->number
+            ]);
+        }
+    }
+
+    /**
+     * Sell item through the dashboard
+     */
+    public function sell(Request $request)
+    {
+        // dd($request);
+        $item = Item::where('code', $request->code)->first();
+
+        Sale::create([
+            'item' => $item,
+            'discount' => $request->discount,
+        ]);
+
+        $tally = Tally::where('item_id',$item->id)->first();
+        
+        $tally->update([
+            'number' => $tally->number - 1
+        ]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Batch selling of items
+     */
+    public function batchSell(Request $request)
+    {
+        $errorReport = collect([]);
+        $successReport = collect([]);
+
+        foreach($request->items as $newItem) {
+            // dd($newItem);
+            $item = Item::where('code', $newItem['code'])->first();
+
+            if ($item) {
+                $tally = Tally::where('item_id',$item->id)->first();
+
+                if ($tally->number > 0) {
+                    // $newSale = Sale::create([
+                    //     'item' => $item, 
+                    //     'discount' => $newItem['discount'],
+                    // ]);
+
+                    // $tally->update([
+                    //     'number' => $tally->number - 1
+                    // ]);
+                    $successReport->push([
+                        'item' => $newItem,
+                        'remarks' => 'Success'
+                    ]);
+                    // dd('exist stock');
+                } else {
+                    $errorReport->push([
+                        'item' => $newItem,
+                        'remarks' => 'No stocks left'
+                    ]);
+                    // dd('exist no stock');
+                }
+            } else {
+                // dd('no');
+                $errorReport->push([
+                    'item' => $newItem,
+                    'remarks' => 'dne'
+                ]);
+            }
+        }
+
+        dd($successReport, $errorReport);
 
         return redirect()->back();
     }

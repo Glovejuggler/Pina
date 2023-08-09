@@ -13,16 +13,16 @@ const showingNavigationDropdown = ref(false);
         <div class="fixed inset-y-0 left-0 w-64 bg-white flex flex-col py-6">
             <div class="mt-12 px-4 space-y-3">
                 <Link :href="route('dashboard')"
-                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out"
-                    :class="$page.url === '/dashboard' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'">
+                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out text-lg"
+                    :class="$page.url === '/dashboard' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'" v-wave>
                 Dashboard</Link>
                 <Link :href="route('items.index')"
-                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out"
-                    :class="$page.component === 'Items/Index' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'">
+                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out text-lg"
+                    :class="$page.component === 'Items/Index' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'" v-wave>
                 Items</Link>
                 <Link :href="route('items.sales')"
-                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out"
-                    :class="$page.component === 'Items/Sales' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'">
+                    class="px-4 py-2 rounded-lg block w-full font-bold duration-300 ease-in-out text-lg"
+                    :class="$page.component === 'Items/Sales' ? 'bg-gray-800 text-white' : 'hover:bg-black/20'" v-wave>
                 Sales</Link>
             </div>
         </div>
@@ -52,6 +52,9 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
+                                        <BreezeDropdownLink :href="route('settings')" as="button">
+                                            Settings
+                                        </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </BreezeDropdownLink>

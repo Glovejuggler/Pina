@@ -11,10 +11,11 @@ const showNewItemModal = ref(false)
 const showEditItemModal = ref(false)
 const showDeleteItemModal = ref(false)
 const showSellItemModal = ref(false)
-const editItem = ref('')
-const deleteItem = ref('')
-const sellItem = ref('')
-const imgTmp = ref('')
+const editItem = ref(null)
+const deleteItem = ref(null)
+const sellItem = ref(null)
+const imgTmp = ref(null)
+const imageInput = ref(null)
 const view = ref(localStorage.getItem('view') || 'list')
 
 const props = defineProps({
@@ -26,7 +27,9 @@ const props = defineProps({
 const newform = useForm({
     image: '',
     name: '',
+    brand: '',
     description: '',
+    cost: '',
     price: '',
     code: '',
 })
@@ -34,7 +37,9 @@ const newform = useForm({
 const editForm = useForm({
     image: '',
     name: '',
+    brand: '',
     description: '',
+    cost: '',
     price: '',
     code: '',
 })
@@ -65,6 +70,13 @@ const updateEditImage = () => {
     }
 }
 
+const removeImage = () => {
+    newform.image = ''
+    editForm.image = ''
+    imgTmp.value = null
+    imageInput.value.value = null
+}
+
 const setCount = (item, count) => {
     Inertia.post(route('items.setCount'), {
         item: item,
@@ -75,7 +87,9 @@ const setCount = (item, count) => {
 const itemEdit = (item) => {
     editItem.value = item
     editForm.name = item.name
+    editForm.brand = item.brand
     editForm.description = item.description
+    editForm.cost = item.cost
     editForm.price = item.price
     editForm.code = item.code
     showEditItemModal.value = true
@@ -152,14 +166,14 @@ watch(
 watch(
     newform,
     value => {
-        if (!value.image) imgTmp.value = null
+        if (!value.image) { imgTmp.value = null }
     }
 )
 
 watch(
     editForm,
     value => {
-        if (!value.image) imgTmp.value = null
+        if (!value.image) { imgTmp.value = null }
     }
 )
 </script>
@@ -170,7 +184,7 @@ watch(
     </title>
 
     <!-- Items -->
-    <div class="max-w-screen-2xl py-6 mx-auto">
+    <div class="max-w-screen-2xl py-6 px-8 mx-auto">
         <div class="flex justify-between">
             <span class="font-bold text-lg">Items<i @click="toggleView"
                     class="bx ml-3 hover:bg-black/20 h-8 w-8 inline-flex justify-center items-center rounded-full text-xl cursor-pointer"
@@ -186,6 +200,8 @@ watch(
             <div>
                 <button @click="showNewItemModal = true" class="rounded-full px-4 py-2 bg-gray-800 text-white text-xs"
                     v-wave>Add</button>
+                <a :href="route('items.export')" class="rounded-full px-4 py-2 bg-green-600 text-white text-xs ml-2"
+                    v-wave>Export to Excel</a>
             </div>
         </div>
         <template v-if="items.data.length">
@@ -205,7 +221,10 @@ watch(
                                     Description
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Price
+                                    Cost
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Selling price
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Count
@@ -221,17 +240,16 @@ watch(
                                     {{ item.code }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    <!-- <div class="flex items-center space-x-2">
-                                    <img :src="`../storage/${item.image}`" :alt="item.name" class="max-w-10 max-h-10">
-                                    <span>{{ item.name }}</span>
-                                </div> -->
                                     {{ item.name }}
                                 </td>
                                 <td class="px-6 py-4 max-w-md">
                                     {{ item.description }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    ₱ {{ item.price.toLocaleString() }}
+                                    {{ currency.format(item.cost) }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ currency.format(item.price) }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div>
@@ -248,16 +266,16 @@ watch(
                                 <td class="px-6 py-4">
                                     <div class="space-x-2">
                                         <button @click="itemEdit(item)"
-                                            class="rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-900 text-white text-xs px-4 py-2">
+                                            class="rounded-lg bg-green-600 text-white text-xs px-4 py-2" v-wave>
                                             Edit
                                         </button>
                                         <button @click="itemDelete(item)"
-                                            class="rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-900 text-white text-xs px-4 py-2">
+                                            class="rounded-lg bg-red-600 text-white text-xs px-4 py-2" v-wave>
                                             Delete
                                         </button>
                                         <button @click="itemSell(item)" :disabled="item.tally.number < 1"
                                             :class="{ 'opacity-25': item.tally.number < 1 }"
-                                            class="rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-900 text-white text-xs px-4 py-2">
+                                            class="rounded-lg bg-blue-600 text-white text-xs px-4 py-2" v-wave>
                                             Sell
                                         </button>
                                     </div>
@@ -344,14 +362,14 @@ watch(
                             </div>
                             <div v-if="imgTmp" onclick="document.querySelector('#newItemFile').click();"
                                 class="group bg-black flex items-center justify-center relative cursor-pointer">
-                                <i @click.stop="imgTmp = null, newform.image = null"
+                                <i @click.stop.prevent="removeImage"
                                     class="bx bx-x h-5 w-5 inline-flex items-center justify-center rounded-full bg-black/50 text-white absolute right-2 top-2 z-50 group-hover:text-black group-hover:bg-white duration-200 ease-in-out hover:scale-125"></i>
                                 <i
                                     class="bx bx-image-add text-5xl text-white absolute group-hover:opacity-100 opacity-0 z-30 duration-300 ease-in-out"></i>
                                 <img :src="imgTmp"
                                     class="max-w-64 max-h-64 group-hover:opacity-50 duration-300 ease-in-out">
                             </div>
-                            <input id="newItemFile" type="file" accept="image/*"
+                            <input id="newItemFile" type="file" accept="image/*" ref="imageInput"
                                 @input="newform.image = $event.target.files[0]" @change="updateNewImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
@@ -361,21 +379,33 @@ watch(
                                 </div>
 
                                 <div class="mt-4">
+                                    <BreezeLabel for="brand" value="Brand" />
+                                    <BreezeInput id="brand" type="text" class="mt-1 block w-full" v-model="newform.brand"
+                                        required />
+                                </div>
+
+                                <div class="mt-4">
                                     <BreezeLabel for="description" value="Description" />
                                     <BreezeInput id="description" type="text" class="mt-1 block w-full"
                                         v-model="newform.description" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="price" value="Price (₱)" />
+                                    <BreezeLabel for="cost" value="Cost (₱)" />
+                                    <BreezeInput id="cost" type="number" class="mt-1 block w-full" v-model="newform.cost"
+                                        required />
+                                </div>
+
+                                <div class="mt-4">
+                                    <BreezeLabel for="price" value="Selling price (₱)" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="newform.price"
                                         required />
                                 </div>
 
                                 <div class="mt-4">
                                     <BreezeLabel for="code" value="Code" />
-                                    <BreezeInput id="code" type="text" class="mt-1 block w-full" v-model="newform.code"
-                                        required />
+                                    <BreezeInput @input="newform.code = newform.code.toUpperCase()" id="code" type="text"
+                                        class="mt-1 block w-full" v-model="newform.code" required />
                                 </div>
                             </div>
                         </div>
@@ -420,22 +450,23 @@ watch(
                         preserveScroll: true,
                     })">
                         <div class="flex items-center">
-                            <div v-if="!editItem.image" onclick="document.querySelector('#editItemFile').click();"
+                            <div v-if="!editItem.image && !imgTmp"
+                                onclick="document.querySelector('#editItemFile').click();"
                                 class="h-64 w-64 rounded-lg bg-slate-300 hover:bg-slate-400 duration-300 ease-in-out cursor-pointer m-2 flex items-center justify-center">
                                 <i class='bx bx-image-add text-5xl text-white'></i>
                             </div>
-                            <div onclick="document.querySelector('#editItemFile').click();"
+                            <div onclick="document.querySelector('#editItemFile').click();" v-if="imgTmp || editItem.image"
                                 class="group bg-black flex items-center justify-center relative cursor-pointer">
-                                <i @click.stop="imgTmp = null" v-if="imgTmp"
+                                <i @click.stop="removeImage" v-if="imgTmp"
                                     class="bx bx-x h-5 w-5 inline-flex items-center justify-center rounded-full bg-black/50 text-white absolute right-2 top-2 z-50 group-hover:text-black group-hover:bg-white duration-200 ease-in-out hover:scale-125"></i>
                                 <i
                                     class="bx bx-image-add text-5xl text-white absolute group-hover:opacity-100 opacity-0 z-30 duration-300 ease-in-out"></i>
                                 <img :src="imgTmp" v-if="imgTmp"
                                     class="max-w-64 max-h-64 group-hover:opacity-50 duration-300 ease-in-out">
-                                <img :src="`../storage/${editItem.image}`" v-if="!imgTmp"
+                                <img :src="`../storage/${editItem.image}`" v-if="!imgTmp && editItem.image"
                                     class="max-w-64 max-h-64 group-hover:opacity-50 duration-300 ease-in-out">
                             </div>
-                            <input id="editItemFile" type="file" accept="image/*"
+                            <input id="editItemFile" type="file" accept="image/*" ref="imageInput"
                                 @input="editForm.image = $event.target.files[0]" @change="updateEditImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
@@ -445,20 +476,33 @@ watch(
                                 </div>
 
                                 <div class="mt-4">
+                                    <BreezeLabel for="brand" value="Brand" />
+                                    <BreezeInput id="brand" type="text" class="mt-1 block w-full" v-model="editForm.brand"
+                                        required />
+                                </div>
+
+                                <div class="mt-4">
                                     <BreezeLabel for="description" value="Description" />
                                     <BreezeInput id="description" type="text" class="mt-1 block w-full"
                                         v-model="editForm.description" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="price" value="Price (₱)" />
+                                    <BreezeLabel for="cost" value="Cost (₱)" />
+                                    <BreezeInput id="cost" type="number" class="mt-1 block w-full"
+                                        v-model="editForm.cost" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <BreezeLabel for="price" value="Selling price (₱)" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full"
                                         v-model="editForm.price" />
                                 </div>
 
                                 <div class="mt-4">
                                     <BreezeLabel for="code" value="Code" />
-                                    <BreezeInput id="code" type="text" class="mt-1 block w-full" v-model="editForm.code" />
+                                    <BreezeInput @Input="editForm.code = editForm.code.toUpperCase()" id="code" type="text"
+                                        class="mt-1 block w-full" v-model="editForm.code" />
                                 </div>
                             </div>
                         </div>
