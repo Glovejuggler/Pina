@@ -64,7 +64,7 @@ watch(
             <template v-for="(gsales, grouping) in sales.data">
                 <div class="flex space-x-3 py-2">
                     <p class="text-gray-800">{{ grouping }}</p>
-                    <a :href="route('sales.export', ['daily' || form.period, gsales[0].created_at])"
+                    <a :href="route('sales.export', [form.period || 'daily', gsales[0].created_at])"
                         class="rounded-full bg-green-600 px-4 inline-flex items-center text-white text-xs" v-wave>Generate
                         report</a>
                 </div>
