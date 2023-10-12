@@ -41,10 +41,6 @@ watch(
 </script>
 
 <template>
-    <title>
-        Sales
-    </title>
-
     <div class="py-6 mx-auto max-w-5xl">
         <div class="flex justify-between mb-3">
             <div class="font-bold text-lg">Sales</div>

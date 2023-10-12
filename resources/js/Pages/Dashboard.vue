@@ -16,10 +16,6 @@ const sellForm = useForm({
 </script>
 
 <template>
-    <title>
-        Dashboard
-    </title>
-
     <div class="max-w-screen-2xl mx-auto py-6 px-8">
         <div @click="$inertia.get(route('items.index'))"
             class="bg-white border rounded-lg w-1/4 p-4 cursor-pointer hover:-translate-y-1 hover:shadow-lg duration-200 ease-in-out">

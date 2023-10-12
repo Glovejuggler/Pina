@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/items/{item}/delete', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::post('/item/count/edit', [ItemController::class, 'setCount'])->name('items.setCount');
     Route::get('items/export', [ItemController::class, 'export'])->name('items.export');
+    Route::post('items/import', [ItemController::class, 'import'])->name('items.import');
 
     Route::get('sales', [SaleController::class, 'index'])->name('items.sales');
     Route::post('item/{item}/sale', [SaleController::class, 'store'])->name('sales.store');

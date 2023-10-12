@@ -30,7 +30,19 @@ class StoreItemRequest extends FormRequest
             'description' => 'nullable',
             'cost' => 'numeric|required',
             'price' => 'numeric|required',
-            'code' => 'required',
+            'code' => 'required|unique:items,code'.$this->item?->code,
+        ];
+    }
+
+    /**
+     * Validation messages
+     * 
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'code.unique' => 'An item with this code already exists'
         ];
     }
 }

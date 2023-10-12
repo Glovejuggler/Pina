@@ -7,6 +7,8 @@
             <th>Description</th>
             <th>Cost</th>
             <th>Selling price</th>
+            <th>Date encoded</th>
+            <th>Stock</th>
         </tr>
     </thead>
     <tbody>
@@ -18,6 +20,8 @@
             <td>{{ $item->description }}</td>
             <td>{{ $item->cost }}</td>
             <td>{{ $item->price }}</td>
+            <td>{{ $item->created_at }}</td>
+            <td>{{ $item->tally->number }}</td>
         </tr>
         @endforeach
     </tbody>

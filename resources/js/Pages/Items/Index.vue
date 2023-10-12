@@ -48,6 +48,19 @@ const sellForm = useForm({
     discount: ''
 })
 
+const itemsImport = useForm({
+    file: ''
+})
+
+const importItem = () => {
+    itemsImport.post(route('items.import'), {
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: () => itemsImport.reset('file'),
+        onCancel: () => itemsImport.reset('file')
+    })
+}
+
 const updateNewImage = () => {
     if (newform.image) {
         let reader = new FileReader();
@@ -202,6 +215,11 @@ watch(
                     v-wave>Add</button>
                 <a :href="route('items.export')" class="rounded-full px-4 py-2 bg-green-600 text-white text-xs ml-2"
                     v-wave>Export to Excel</a>
+                <button onclick="document.getElementById('importItems').click()"
+                    class="bg-blue-500 text-white px-4 py-2 text-xs ml-2 rounded-full" v-wave>Import</button>
+                <input type="file" @input="itemsImport.file = $event.target.files[0]" @change="importItem"
+                    accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    id="importItems" hidden>
             </div>
         </div>
         <template v-if="items.data.length">
@@ -406,6 +424,7 @@ watch(
                                     <BreezeLabel for="code" value="Code" />
                                     <BreezeInput @input="newform.code = newform.code.toUpperCase()" id="code" type="text"
                                         class="mt-1 block w-full" v-model="newform.code" required />
+                                    <span v-if="errors.code" class="text-red-500 text-sm">{{ errors.code }}</span>
                                 </div>
                             </div>
                         </div>
