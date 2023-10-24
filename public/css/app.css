@@ -815,6 +815,10 @@ select {
 .h-auto {
   height: auto;
 }
+.h-min {
+  height: -moz-min-content;
+  height: min-content;
+}
 .h-screen {
   height: 100vh;
 }

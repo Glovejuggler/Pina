@@ -34,6 +34,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
         'items' => Item::all()->count(),
+        'current_inventory' => Item::with('tally')->get()->sum(function($q) {
+                                        return $q->cost * $q->tally->number;
+                                    }),
         'dailyReport' => Sale::whereDate('created_at',now())->exists()
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');

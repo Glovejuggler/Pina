@@ -25,7 +25,6 @@ class StoreItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
             'brand' => 'required',
             'description' => 'nullable',
             'cost' => 'numeric|required',

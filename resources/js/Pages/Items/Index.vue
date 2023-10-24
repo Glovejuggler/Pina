@@ -26,7 +26,6 @@ const props = defineProps({
 
 const newform = useForm({
     image: '',
-    name: '',
     brand: '',
     description: '',
     cost: '',
@@ -36,7 +35,6 @@ const newform = useForm({
 
 const editForm = useForm({
     image: '',
-    name: '',
     brand: '',
     description: '',
     cost: '',
@@ -99,7 +97,6 @@ const setCount = (item, count) => {
 
 const itemEdit = (item) => {
     editItem.value = item
-    editForm.name = item.name
     editForm.brand = item.brand
     editForm.description = item.description
     editForm.cost = item.cost
@@ -233,7 +230,7 @@ watch(
                                     Code
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Name
+                                    Brand
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Description
@@ -258,7 +255,7 @@ watch(
                                     {{ item.code }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ item.name }}
+                                    {{ item.brand }}
                                 </td>
                                 <td class="px-6 py-4 max-w-md">
                                     {{ item.description }}
@@ -314,9 +311,9 @@ watch(
                             <i v-else class="bx bx-image-alt text-3xl text-slate-900"></i>
                         </div>
                         <div class="overflow-hidden">
-                            <p class="font-semibold">{{ item.name }}</p>
-                            <p class="text-sm">{{ item.code }}</p>
+                            <p class="font-semibold">{{ item.brand }}</p>
                             <p class="text-sm text-slate-500 break-words">{{ item.description }}</p>
+                            <p class="text-sm">{{ item.code }}</p>
                         </div>
                     </div>
                     <div class="justify-self-center">
@@ -391,9 +388,10 @@ watch(
                                 @input="newform.image = $event.target.files[0]" @change="updateNewImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
-                                    <BreezeLabel for="name" value="Name" />
-                                    <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="newform.name"
-                                        required autofocus />
+                                    <BreezeLabel for="code" value="Code" />
+                                    <BreezeInput @input="newform.code = newform.code.toUpperCase()" id="code" type="text"
+                                        class="mt-1 block w-full" v-model="newform.code" required />
+                                    <span v-if="errors.code" class="text-red-500 text-sm">{{ errors.code }}</span>
                                 </div>
 
                                 <div class="mt-4">
@@ -418,13 +416,6 @@ watch(
                                     <BreezeLabel for="price" value="Selling price (₱)" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="newform.price"
                                         required />
-                                </div>
-
-                                <div class="mt-4">
-                                    <BreezeLabel for="code" value="Code" />
-                                    <BreezeInput @input="newform.code = newform.code.toUpperCase()" id="code" type="text"
-                                        class="mt-1 block w-full" v-model="newform.code" required />
-                                    <span v-if="errors.code" class="text-red-500 text-sm">{{ errors.code }}</span>
                                 </div>
                             </div>
                         </div>
@@ -489,9 +480,9 @@ watch(
                                 @input="editForm.image = $event.target.files[0]" @change="updateEditImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
-                                    <BreezeLabel for="name" value="Name" />
-                                    <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="editForm.name"
-                                        required autofocus />
+                                    <BreezeLabel for="code" value="Code" />
+                                    <BreezeInput @Input="editForm.code = editForm.code.toUpperCase()" id="code" type="text"
+                                        class="mt-1 block w-full" v-model="editForm.code" />
                                 </div>
 
                                 <div class="mt-4">
@@ -516,12 +507,6 @@ watch(
                                     <BreezeLabel for="price" value="Selling price (₱)" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full"
                                         v-model="editForm.price" />
-                                </div>
-
-                                <div class="mt-4">
-                                    <BreezeLabel for="code" value="Code" />
-                                    <BreezeInput @Input="editForm.code = editForm.code.toUpperCase()" id="code" type="text"
-                                        class="mt-1 block w-full" v-model="editForm.code" />
                                 </div>
                             </div>
                         </div>

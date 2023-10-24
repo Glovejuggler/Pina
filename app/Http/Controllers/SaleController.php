@@ -107,10 +107,8 @@ class SaleController extends Controller
             'discount' => $request->discount,
         ]);
 
-        $tally = Tally::where('item_id',$item->id)->first();
-        
-        $tally->update([
-            'number' => $tally->number - 1
+        $item->tally->update([
+            'number' => $item->tally->number - 1
         ]);
 
         return redirect()->back();
@@ -125,17 +123,17 @@ class SaleController extends Controller
         $error = null;
         if (!Item::where('code',$request->code)->exists()) {
             $error = 'Item does not exist';
-        } elseif(Item::where('code',$request->code)->first()->tally->number < 1) {
-            $error = 'Item does not have stock';
         }
 
         if ($error) {
             return redirect()->back()->withErrors([
                 'item' => $error
+            ])->withItem([
+                'item' => null
             ]);
         } else {
-            return redirect()->back()->withErrors([
-                'count' => Item::where('code',$request->code)->first()->tally->number
+            return redirect()->back()->withItem([
+                'item' => Item::with('tally')->where('code',$request->code)->first()
             ]);
         }
     }
@@ -151,12 +149,11 @@ class SaleController extends Controller
         Sale::create([
             'item' => $item,
             'discount' => $request->discount,
+            'created_at' => $request->date
         ]);
 
-        $tally = Tally::where('item_id',$item->id)->first();
-        
-        $tally->update([
-            'number' => $tally->number - 1
+        $item->tally->update([
+            'number' => $item->tally->number - 1
         ]);
 
         return redirect()->back();

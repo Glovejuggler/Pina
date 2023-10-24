@@ -15,7 +15,6 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('brand');
             $table->string('description')->nullable();            
             $table->integer('cost');

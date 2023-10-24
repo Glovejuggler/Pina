@@ -34,7 +34,6 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
         $item = Item::firstOrCreate([
             'code' => $row['code'],
         ], [
-            'name' => $row['name'],
             'brand' => $row['brand'],
             'description' => $row['description'],
             'cost' => $row['cost'],
@@ -43,7 +42,7 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
         ]);
 
         $stock = $item->tally()->firstOrCreate([
-            'number' => $row['stock']
+            'number' => $row['stock'] ? $row['stock'] : 1
         ]);
     }
 }
