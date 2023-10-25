@@ -45,7 +45,8 @@ class SalesExport implements FromView, ShouldAutoSize, WithStyles
 
         return view('exports.sales', [
             'sales' => $sales,
-            'total' => $sales->sum('net'),
+            'totalNet' => $sales->sum('net'),
+            'totalMarkup' => $sales->sum('markup'),
             'headDate' => $headDate
         ]);
     }

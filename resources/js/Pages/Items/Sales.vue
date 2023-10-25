@@ -69,11 +69,12 @@ watch(
                         <div class="flex h-10 w-10 bg-slate-100 rounded-md justify-center items-center">
                             <img v-if="sale.item.image" :src="`../storage/${sale.item.image}`"
                                 class="max-w-10 max-h-10 object-contain" alt="">
+                            <i v-else class="bx bx-image-alt text-xl text-slate-900"></i>
                         </div>
                         <div>
-                            <p class="font-semibold">{{ sale.item.name }}</p>
+                            <p class="font-semibold">{{ sale.item.brand }}</p>
+                            <p class="text-sm">{{ sale.item.description }}</p>
                             <p class="text-sm">{{ sale.item.code }}</p>
-                            <p class="text-sm text-slate-500 line-clamp-1 block">{{ sale.item.description }}</p>
                         </div>
                     </div>
                     <div>

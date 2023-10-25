@@ -761,12 +761,6 @@ select {
 .mt-8 {
   margin-top: 2rem;
 }
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
 .block {
   display: block;
 }

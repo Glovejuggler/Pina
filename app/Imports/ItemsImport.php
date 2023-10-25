@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use Carbon\Carbon;
 use App\Models\Item;
+use App\Models\Sale;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -30,7 +31,7 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
     {
         // $rowIndex = $row->getIndex();
         $row = $row->toArray();
-
+        
         $item = Item::firstOrCreate([
             'code' => $row['code'],
         ], [
@@ -44,5 +45,50 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
         $stock = $item->tally()->firstOrCreate([
             'number' => $row['stock'] ? $row['stock'] : 1
         ]);
+
+        if ($row['discount'] && !Sale::where('item->code',$row['code'])->exists()) {
+            Sale::create([
+                'item' => $item,
+                'discount' => $row['discount']
+            ]);
+
+            $stock->update([
+                'number' => $stock->number < 1 ? 0 : $stock->number - 1
+            ]);
+        }
+
+        // if (Item::where('code',$row['code'])->exists()) {
+        //     $item = Item::where('code',$row['code'])->first();
+
+        //     $item->update([
+        //         'brand' => $row['brand'],
+        //         'description' => $row['description'],
+        //         'cost' => $row['cost'],
+        //         'price' => $row['selling_price'],
+        //         'created_at' => $row['date_encoded'] ? Carbon::parse($row['date_encoded']) : $item->created_at,
+        //     ]);
+
+        //     $stock = $item->tally()->firstOrCreate([
+        //         'number' => $row['stock'] ? $row['stock'] : 1
+        //     ]);
+
+        //     if ($row['discount']) {
+        //         // something about checking if there is a sale of this item already
+        //         // if not then create the sale
+        //     }
+        // } else {
+        //     $item = Item::create([
+        //         'code' => $row['code'],
+        //         'brand' => $row['brand'],
+        //         'description' => $row['description'],
+        //         'cost' => $row['cost'],
+        //         'price' => $row['selling_price'],
+        //         'created_at' => $row['date_encoded'] ? Carbon::parse($row['date_encoded']) : $item->created_at,
+        //     ]);
+
+        //     $stock = $item->tally()->firstOrCreate([
+        //         'number' => $row['stock'] ? $row['stock'] : 1
+        //     ]);
+        // }
     }
 }
