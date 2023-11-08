@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('check', [SaleController::class, 'check'])->name('check');
     Route::post('sell', [SaleController::class, 'sell'])->name('sell');
     Route::get('sales/export/{period?}/{date?}', [SaleController::class, 'export'])->name('sales.export');
+    Route::post('sales/view/', [SaleController::class, 'view'])->name('sales.view');
 
     Route::put('user/{user}/update', [UserController::class, 'update'])->name('user.update');
     Route::put('{user}/password/change', [UserController::class, 'changePassword'])->name('password.change');

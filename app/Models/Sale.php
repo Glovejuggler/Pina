@@ -24,6 +24,6 @@ class Sale extends Model
 
     public function getMarkupAttribute()
     {
-        return $this->net = $this->item['cost'];
+        return $this->net - $this->item['cost'];
     }
 }

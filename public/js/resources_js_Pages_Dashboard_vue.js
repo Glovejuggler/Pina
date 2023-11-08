@@ -99,7 +99,7 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var sellForm = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.useForm)({
       code: '',
-      discount: '',
+      priceSold: '',
       date: new Date().toISOString().slice(0, 10)
     });
     var currency = new Intl.NumberFormat('en-US', {
@@ -241,25 +241,29 @@ var _hoisted_16 = {
 var _hoisted_17 = {
   "class": "mt-4"
 };
-var _hoisted_18 = ["disabled"];
-var _hoisted_19 = {
+var _hoisted_18 = {
+  key: 0,
+  "class": "text-red-500 text-sm"
+};
+var _hoisted_19 = ["disabled"];
+var _hoisted_20 = {
   key: 0,
   "class": "bg-white border rounded-lg w-1/4 p-4 mt-4 h-min"
 };
-var _hoisted_20 = {
-  "class": "font-bold"
-};
 var _hoisted_21 = {
-  "class": "text-sm"
+  "class": "font-bold"
 };
 var _hoisted_22 = {
-  "class": "font-bold"
+  "class": "text-sm"
 };
 var _hoisted_23 = {
   "class": "font-bold"
 };
+var _hoisted_24 = {
+  "class": "font-bold"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _$props$item, _$props$item$item, _$props$item2, _$props$item2$item, _$props$item3, _$props$item4, _$props$item5, _$props$item6;
+  var _$props$item, _$props$item$item, _$props$item2, _$props$item2$item, _$props$item3, _$props$item3$item, _$props$item4, _$props$item5, _$props$item6, _$props$item7;
   var _directive_wave = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("wave");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: _cache[0] || (_cache[0] = function ($event) {
@@ -276,7 +280,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         preserveState: true,
         preserveScroll: true,
         onSuccess: function onSuccess() {
-          $setup.sellForm.reset('code', 'discount');
+          $setup.sellForm.reset('code', 'priceSold');
           $setup.sellForm.code = '';
         }
       });
@@ -310,25 +314,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     required: ""
   }, null, 8 /* PROPS */, ["modelValue"]), $props.errors.item ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.errors.item), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeLabel"], {
-    "for": "discount",
-    value: "Discount"
+    "for": "price",
+    value: "Price sold"
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeInput"], {
-    id: "discount",
+    id: "price",
     type: "number",
     "class": "mt-1 block w-full",
-    modelValue: $setup.sellForm.discount,
+    modelValue: $setup.sellForm.priceSold,
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
-      return $setup.sellForm.discount = $event;
-    })
-  }, null, 8 /* PROPS */, ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    disabled: !$props.item || ((_$props$item = $props.item) === null || _$props$item === void 0 ? void 0 : (_$props$item$item = _$props$item.item) === null || _$props$item$item === void 0 ? void 0 : _$props$item$item.tally.number) < 1 || $props.errors.item,
+      return $setup.sellForm.priceSold = $event;
+    }),
+    required: ""
+  }, null, 8 /* PROPS */, ["modelValue"]), $setup.sellForm.priceSold > ((_$props$item = $props.item) === null || _$props$item === void 0 ? void 0 : (_$props$item$item = _$props$item.item) === null || _$props$item$item === void 0 ? void 0 : _$props$item$item.price) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, "Higher than item's selling price")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    disabled: !$props.item || ((_$props$item2 = $props.item) === null || _$props$item2 === void 0 ? void 0 : (_$props$item2$item = _$props$item2.item) === null || _$props$item2$item === void 0 ? void 0 : _$props$item2$item.tally.number) < 1 || $props.errors.item || !$setup.sellForm.priceSold,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
-      'opacity-25': !$props.item || ((_$props$item2 = $props.item) === null || _$props$item2 === void 0 ? void 0 : (_$props$item2$item = _$props$item2.item) === null || _$props$item2$item === void 0 ? void 0 : _$props$item2$item.tally.number) < 1 || $props.errors.item
+      'opacity-25': !$props.item || ((_$props$item3 = $props.item) === null || _$props$item3 === void 0 ? void 0 : (_$props$item3$item = _$props$item3.item) === null || _$props$item3$item === void 0 ? void 0 : _$props$item3$item.tally.number) < 1 || $props.errors.item || !$setup.sellForm.priceSold
     }, "px-4 py-2 mt-4 w-full text-xs bg-gray-800 rounded-lg text-white"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Save ")], 10 /* CLASS, PROPS */, _hoisted_18)), [[_directive_wave]])], 32 /* HYDRATE_EVENTS */)]), (_$props$item3 = $props.item) !== null && _$props$item3 !== void 0 && _$props$item3.item ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.item.item.brand), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.item.item.description), 1 /* TEXT */), (_$props$item4 = $props.item) !== null && _$props$item4 !== void 0 && _$props$item4.item && $setup.sellForm.code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Save ")], 10 /* CLASS, PROPS */, _hoisted_19)), [[_directive_wave]])], 32 /* HYDRATE_EVENTS */)]), (_$props$item4 = $props.item) !== null && _$props$item4 !== void 0 && _$props$item4.item ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.item.item.brand), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.item.item.description), 1 /* TEXT */), (_$props$item5 = $props.item) !== null && _$props$item5 !== void 0 && _$props$item5.item && $setup.sellForm.code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
     key: 0,
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["text-sm", ((_$props$item5 = $props.item) === null || _$props$item5 === void 0 ? void 0 : _$props$item5.item.tally.number) < 1 ? 'text-red-500' : 'text-green-500'])
-  }, " Stocks left: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$item6 = $props.item) === null || _$props$item6 === void 0 ? void 0 : _$props$item6.item.tally.number), 3 /* TEXT, CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Price: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($props.item.item.price)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Cost: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($props.item.item.cost)), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["text-sm", ((_$props$item6 = $props.item) === null || _$props$item6 === void 0 ? void 0 : _$props$item6.item.tally.number) < 1 ? 'text-red-500' : 'text-green-500'])
+  }, " Stocks left: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$item7 = $props.item) === null || _$props$item7 === void 0 ? void 0 : _$props$item7.item.tally.number), 3 /* TEXT, CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Price: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($props.item.item.price)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Cost: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($props.item.item.cost)), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
 
 /***/ }),

@@ -44201,6 +44201,10 @@ var map = {
 		"./resources/js/Pages/Items/Index.vue",
 		"resources_js_Pages_Items_Index_vue"
 	],
+	"./Items/SaleView.vue": [
+		"./resources/js/Pages/Items/SaleView.vue",
+		"resources_js_Pages_Items_SaleView_vue"
+	],
 	"./Items/Sales.vue": [
 		"./resources/js/Pages/Items/Sales.vue",
 		"resources_js_Pages_Items_Sales_vue"
@@ -44362,7 +44366,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_vue":1,"resources_js_Pages_Auth_ForgotPassword_vue":1,"resources_js_Pages_Auth_Login_vue":1,"resources_js_Pages_Auth_Register_vue":1,"resources_js_Pages_Auth_ResetPassword_vue":1,"resources_js_Pages_Auth_VerifyEmail_vue":1,"resources_js_Pages_BatchSell_vue":1,"resources_js_Pages_BatchSellReport_vue":1,"resources_js_Pages_Dashboard_vue":1,"resources_js_Pages_Items_Index_vue":1,"resources_js_Pages_Items_Sales_vue":1,"resources_js_Pages_Settings_vue":1,"resources_js_Pages_Welcome_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_vue":1,"resources_js_Pages_Auth_ForgotPassword_vue":1,"resources_js_Pages_Auth_Login_vue":1,"resources_js_Pages_Auth_Register_vue":1,"resources_js_Pages_Auth_ResetPassword_vue":1,"resources_js_Pages_Auth_VerifyEmail_vue":1,"resources_js_Pages_BatchSell_vue":1,"resources_js_Pages_BatchSellReport_vue":1,"resources_js_Pages_Dashboard_vue":1,"resources_js_Pages_Items_Index_vue":1,"resources_js_Pages_Items_SaleView_vue":1,"resources_js_Pages_Items_Sales_vue":1,"resources_js_Pages_Settings_vue":1,"resources_js_Pages_Welcome_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

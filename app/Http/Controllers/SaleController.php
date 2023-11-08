@@ -63,6 +63,43 @@ class SaleController extends Controller
     }
 
     /**
+     * View the sales report of a certain period/date
+     */
+    public function view(Request $request)
+    {
+        // dd($request);
+        $date = Carbon::parse($request->date);
+        $period = $request->period;
+
+        if ($date && $period) {
+            if ($period == 'weekly') {
+                $sales = Sale::whereDate('created_at','>=',$date->startOfWeek(Carbon::SUNDAY))
+                                ->whereDate('created_at','<=',$date->endOfWeek(Carbon::SATURDAY))
+                                ->get();
+                $headDate = $date->startOfWeek(Carbon::SUNDAY)->format('F j, Y').' to '.$date->endOfWeek(Carbon::SATURDAY)->format('F j, Y');
+            } elseif ($period == 'monthly') {
+                $sales = Sale::whereMonth('created_at',$date->month)->get();
+                $headDate = $date->format('F Y');
+            } elseif ($period == 'daily') {
+                $sales = Sale::whereDate('created_at',$date)->get();
+                $headDate = $date->format('F j, Y');
+            }
+        } else {
+            $sales = Sale::whereDate('created_at',$date)->get();
+            $headDate = $date->format('F j, Y');
+        }
+
+        return inertia('Items/SaleView', [
+            'sales' => $sales,
+            'headDate' => $headDate,
+            'info' => [
+                'period' => $period,
+                'date' => $date
+            ]
+        ]);
+    }
+
+    /**
      * Excel export
      */
     public function export($period = null, $date = null)
@@ -102,9 +139,13 @@ class SaleController extends Controller
     public function store(Item $item, Request $request)
     {
         // dd($item, $request);
+        $request->validate([
+            'priceSold' => 'required|numeric'
+        ]);
+
         Sale::create([
             'item' => $item,
-            'discount' => $request->discount,
+            'discount' => $item->price - $request->priceSold,
         ]);
 
         $item->tally->update([
@@ -144,11 +185,16 @@ class SaleController extends Controller
     public function sell(Request $request)
     {
         // dd($request);
+        $request->validate([
+            'code' => 'required',
+            'priceSold' => 'required'
+        ]);
+        
         $item = Item::where('code', $request->code)->first();
 
         Sale::create([
             'item' => $item,
-            'discount' => $request->discount,
+            'discount' => $item->price - $request->priceSold,
             'created_at' => $request->date
         ]);
 

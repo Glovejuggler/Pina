@@ -46,10 +46,10 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
             'number' => $row['stock'] ? $row['stock'] : 1
         ]);
 
-        if ($row['discount'] && !Sale::where('item->code',$row['code'])->exists()) {
+        if ($row['price_sold'] && !Sale::where('item->code',$row['code'])->exists()) {
             Sale::create([
                 'item' => $item,
-                'discount' => $row['discount']
+                'discount' => $item->price - $row['price_sold']
             ]);
 
             $stock->update([

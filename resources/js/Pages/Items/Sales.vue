@@ -45,10 +45,10 @@ watch(
         <div class="flex justify-between mb-3">
             <div class="font-bold text-lg">Sales</div>
             <div class="flex space-x-2">
-                <input v-if="form.period === ''" type="date"
+                <input v-if="form.period === ''" type="date" name="date"
                     class="rounded-lg w-full text-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm"
                     v-model="form.date">
-                <select v-model="form.period"
+                <select v-model="form.period" name="period"
                     class="block rounded-lg text-sm text-gray-700 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm w-full">
                     <option value="">Daily</option>
                     <option value="weekly">Weekly</option>
@@ -60,9 +60,13 @@ watch(
             <template v-for="(gsales, grouping) in sales.data">
                 <div class="flex space-x-3 py-2">
                     <p class="text-gray-800">{{ grouping }}</p>
-                    <a :href="route('sales.export', [form.period || 'daily', gsales[0].created_at])"
-                        class="rounded-full bg-green-600 px-4 inline-flex items-center text-white text-xs" v-wave>Generate
-                        report</a>
+                    <p @click="Inertia.post(route('sales.view'), {
+                        period: form.period || 'daily',
+                        date: gsales[0].created_at
+                    })"
+                        class="rounded-full bg-green-600 px-4 inline-flex items-center text-white text-xs cursor-pointer"
+                        v-wave>
+                        Report</p>
                 </div>
                 <div v-for="sale in gsales" class="bg-white rounded-lg p-4 mb-2 grid grid-cols-3 border">
                     <div class="flex space-x-3">
@@ -80,10 +84,13 @@ watch(
                     <div>
                         <p>{{ currency.format(sale.item.price - sale.discount) }}</p>
                         <p class="text-xs">Cost: {{ currency.format(sale.item.cost) }}</p>
-                        <p v-if="sale.discount" class="text-xs line-through opacity-60">{{ currency.format(sale.item.price)
+                        <p class="text-xs">Selling price: {{ currency.format(sale.item.price) }}</p>
+                        <p v-if="sale.discount && sale.discount > 0" class="text-xs line-through opacity-60">{{
+                            currency.format(sale.item.price)
                         }}
                         </p>
-                        <p v-if="sale.discount" class="text-xs opacity-60">Discount: {{ currency.format(sale.discount)
+                        <p v-if="sale.discount && sale.discount > 0" class="text-xs opacity-60">Discount: {{
+                            currency.format(sale.discount)
                         }}<span class="ml-2">-{{
     Math.round((sale.discount / sale.item.price) * 100) }}%</span></p>
                     </div>

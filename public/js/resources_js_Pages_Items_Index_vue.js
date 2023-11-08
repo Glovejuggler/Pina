@@ -157,7 +157,7 @@ __webpack_require__.r(__webpack_exports__);
       code: ''
     });
     var sellForm = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
-      discount: ''
+      priceSold: ''
     });
     var itemsImport = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       file: ''
@@ -771,6 +771,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, "-", 8 /* PROPS */, _hoisted_20), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       "class": "mx-2 w-12 rounded-lg text-xs",
       type: "text",
+      name: "count",
       value: item.tally.number,
       onChange: function onChange($event) {
         return $setup.setCount(item, $event.target.value);
@@ -816,6 +817,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, "-", 10 /* CLASS, PROPS */, _hoisted_40), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       "class": "mx-2 w-12 rounded-lg text-xs",
       type: "text",
+      name: "count",
       value: item.tally.number,
       onChange: function onChange($event) {
         return $setup.setCount(item, $event.target.value);
@@ -1197,16 +1199,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             }
           });
         }, ["prevent"]))
-      }, [_hoisted_94, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($setup.sellItem.price)) + " ", 1 /* TEXT */), $setup.sellForm.discount ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_95, [_hoisted_96, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($setup.sellItem.price - $setup.sellForm.discount)) + " ", 1 /* TEXT */), Math.round($setup.sellForm.discount / $setup.sellItem.price * 100) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_97, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round($setup.sellForm.discount / $setup.sellItem.price * 100)) + "% off", 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_98, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeLabel"], {
-        "for": "discount",
-        value: "Discount"
+      }, [_hoisted_94, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($setup.sellItem.price)) + " ", 1 /* TEXT */), $setup.sellForm.priceSold ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_95, [_hoisted_96, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.currency.format($setup.sellForm.priceSold)) + " ", 1 /* TEXT */), Math.round(($setup.sellItem.price - $setup.sellForm.priceSold) / $setup.sellItem.price * 100) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_97, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round(($setup.sellItem.price - $setup.sellForm.priceSold) / $setup.sellItem.price * 100)) + "% off", 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_98, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeLabel"], {
+        "for": "sold",
+        value: "Price sold"
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["BreezeInput"], {
-        id: "discount",
+        id: "sold",
         type: "number",
         "class": "mt-1 block w-full",
-        modelValue: $setup.sellForm.discount,
+        modelValue: $setup.sellForm.priceSold,
         "onUpdate:modelValue": _cache[26] || (_cache[26] = function ($event) {
-          return $setup.sellForm.discount = $event;
+          return $setup.sellForm.priceSold = $event;
         }),
         autofocus: ""
       }, null, 8 /* PROPS */, ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {

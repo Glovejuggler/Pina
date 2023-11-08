@@ -43,7 +43,7 @@ const editForm = useForm({
 })
 
 const sellForm = useForm({
-    discount: ''
+    priceSold: ''
 })
 
 const itemsImport = useForm({
@@ -271,8 +271,8 @@ watch(
                                         <button
                                             class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
                                             @click="setCount(item, item.tally.number - 1)">-</button>
-                                        <input class="mx-2 w-12 rounded-lg text-xs" type="text" :value="item.tally.number"
-                                            @change="setCount(item, $event.target.value)">
+                                        <input class="mx-2 w-12 rounded-lg text-xs" type="text" name="count"
+                                            :value="item.tally.number" @change="setCount(item, $event.target.value)">
                                         <button
                                             class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
                                             @click="setCount(item, item.tally.number + 1)">+</button>
@@ -322,7 +322,7 @@ watch(
                             <button :disabled="item.tally.number === 0" :class="{ 'opacity-25': item.tally.number === 0 }"
                                 class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
                                 @click="setCount(item, item.tally.number - 1)">-</button>
-                            <input class="mx-2 w-12 rounded-lg text-xs" type="text" :value="item.tally.number"
+                            <input class="mx-2 w-12 rounded-lg text-xs" type="text" name="count" :value="item.tally.number"
                                 @change="setCount(item, $event.target.value)">
                             <button
                                 class="rounded-lg w-5 bg-slate-300 hover:bg-slate-500 hover:text-white active:bg-slate-700 active:text-white"
@@ -586,18 +586,18 @@ watch(
                         }
                     })">
                         <span class="font-bold">Price: </span>{{ currency.format(sellItem.price) }}
-                        <div v-if="sellForm.discount">
-                            <span class="font-bold">Subtotal: </span>{{ currency.format(sellItem.price - sellForm.discount)
+                        <div v-if="sellForm.priceSold">
+                            <span class="font-bold">Subtotal: </span>{{ currency.format(sellForm.priceSold)
                             }}
-                            <span v-if="Math.round((sellForm.discount / sellItem.price) * 100) > 0"
+                            <span v-if="Math.round(((sellItem.price - sellForm.priceSold) / sellItem.price) * 100) > 0"
                                 class="bg-green-500 text-white text-xs rounded-full px-2">{{
-                                    Math.round((sellForm.discount
+                                    Math.round(((sellItem.price - sellForm.priceSold)
                                         /
                                         sellItem.price) * 100) }}% off</span>
                         </div>
                         <div class="mt-4">
-                            <BreezeLabel for="discount" value="Discount" />
-                            <BreezeInput id="discount" type="number" class="mt-1 block w-full" v-model="sellForm.discount"
+                            <BreezeLabel for="sold" value="Price sold" />
+                            <BreezeInput id="sold" type="number" class="mt-1 block w-full" v-model="sellForm.priceSold"
                                 autofocus />
                         </div>
                         <div class="mt-4 flex justify-end space-x-2">

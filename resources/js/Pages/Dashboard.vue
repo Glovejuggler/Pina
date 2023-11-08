@@ -13,7 +13,7 @@ const props = defineProps({
 
 const sellForm = useForm({
     code: '',
-    discount: '',
+    priceSold: '',
     date: new Date().toISOString().slice(0, 10)
 })
 
@@ -56,7 +56,7 @@ const currency = new Intl.NumberFormat('en-US', {
                     preserveState: true,
                     preserveScroll: true,
                     onSuccess: () => {
-                        sellForm.reset('code', 'discount')
+                        sellForm.reset('code', 'priceSold')
                         sellForm.code = ''
                     }
                 })">
@@ -80,11 +80,14 @@ const currency = new Intl.NumberFormat('en-US', {
                         <span v-if="errors.item" class="text-red-500 text-sm">{{ errors.item }}</span>
                     </div>
                     <div class="mt-4">
-                        <BreezeLabel for="discount" value="Discount" />
-                        <BreezeInput id="discount" type="number" class="mt-1 block w-full" v-model="sellForm.discount" />
+                        <BreezeLabel for="price" value="Price sold" />
+                        <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="sellForm.priceSold"
+                            required />
+                        <span v-if="sellForm.priceSold > item?.item?.price" class="text-red-500 text-sm">Higher than item's
+                            selling price</span>
                     </div>
-                    <button :disabled="!item || item?.item?.tally.number < 1 || errors.item"
-                        :class="{ 'opacity-25': !item || item?.item?.tally.number < 1 || errors.item }"
+                    <button :disabled="!item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold"
+                        :class="{ 'opacity-25': !item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold }"
                         class="px-4 py-2 mt-4 w-full text-xs bg-gray-800 rounded-lg text-white" v-wave>
                         Save
                     </button>
