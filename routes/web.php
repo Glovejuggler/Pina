@@ -33,7 +33,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'items' => Item::all()->count(),
+        'items' => Item::with('tally')->get()->sum(function($q) {
+            return $q->tally->number;
+        }),
         'current_inventory' => Item::with('tally')->get()->sum(function($q) {
                                         return $q->cost * $q->tally->number;
                                     }),

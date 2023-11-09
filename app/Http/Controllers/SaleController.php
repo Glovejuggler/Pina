@@ -92,6 +92,8 @@ class SaleController extends Controller
         return inertia('Items/SaleView', [
             'sales' => $sales,
             'headDate' => $headDate,
+            'totalNet' => $sales->sum('net'),
+            'totalMarkup' => $sales->sum('markup'),
             'info' => [
                 'period' => $period,
                 'date' => $date
