@@ -21,11 +21,12 @@ const view = ref(localStorage.getItem('view') || 'list')
 const props = defineProps({
     items: Object,
     errors: Object,
-    filters: Object
+    filters: Object,
 })
 
 const newform = useForm({
     image: '',
+    supplier: '',
     brand: '',
     description: '',
     cost: '',
@@ -35,6 +36,7 @@ const newform = useForm({
 
 const editForm = useForm({
     image: '',
+    supplier: '',
     brand: '',
     description: '',
     cost: '',
@@ -54,7 +56,10 @@ const importItem = () => {
     itemsImport.post(route('items.import'), {
         preserveScroll: true,
         preserveState: false,
-        onSuccess: () => itemsImport.reset('file'),
+        onSuccess: () => {
+            itemsImport.reset('file')
+            itemsImport.file = ''
+        },
         onCancel: () => itemsImport.reset('file')
     })
 }
@@ -97,6 +102,7 @@ const setCount = (item, count) => {
 
 const itemEdit = (item) => {
     editItem.value = item
+    editForm.supplier = item.supplier
     editForm.brand = item.brand
     editForm.description = item.description
     editForm.cost = item.cost
@@ -230,6 +236,9 @@ watch(
                                     Code
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Supplier
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Brand
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -255,10 +264,13 @@ watch(
                                     {{ item.code }}
                                 </th>
                                 <td class="px-6 py-4">
+                                    {{ item.supplier ?? '-' }}
+                                </td>
+                                <td class="px-6 py-4">
                                     {{ item.brand }}
                                 </td>
                                 <td class="px-6 py-4 max-w-md">
-                                    {{ item.description }}
+                                    {{ item.description ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ currency.format(item.cost) }}
@@ -388,14 +400,22 @@ watch(
                                 @input="newform.image = $event.target.files[0]" @change="updateNewImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
-                                    <BreezeLabel for="code" value="Code" />
+                                    <BreezeLabel for="code" value="Code"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput @input="newform.code = newform.code.toUpperCase()" id="code" type="text"
                                         class="mt-1 block w-full" v-model="newform.code" required />
                                     <span v-if="errors.code" class="text-red-500 text-sm">{{ errors.code }}</span>
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="brand" value="Brand" />
+                                    <BreezeLabel for="supplier" value="Supplier" />
+                                    <BreezeInput id="supplier" type="text" class="mt-1 block w-full"
+                                        v-model="newform.supplier" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <BreezeLabel for="brand" value="Brand"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="brand" type="text" class="mt-1 block w-full" v-model="newform.brand"
                                         required />
                                 </div>
@@ -407,13 +427,15 @@ watch(
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="cost" value="Cost (₱)" />
+                                    <BreezeLabel for="cost" value="Cost (₱)"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="cost" type="number" class="mt-1 block w-full" v-model="newform.cost"
                                         required />
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="price" value="Selling price (₱)" />
+                                    <BreezeLabel for="price" value="Selling price (₱)"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="newform.price"
                                         required />
                                 </div>
@@ -480,13 +502,21 @@ watch(
                                 @input="editForm.image = $event.target.files[0]" @change="updateEditImage" hidden>
                             <div class="w-96 m-2">
                                 <div>
-                                    <BreezeLabel for="code" value="Code" />
+                                    <BreezeLabel for="code" value="Code"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput @Input="editForm.code = editForm.code.toUpperCase()" id="code" type="text"
                                         class="mt-1 block w-full" v-model="editForm.code" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="brand" value="Brand" />
+                                    <BreezeLabel for="supplier" value="Supplier" />
+                                    <BreezeInput id="supplier" type="text" class="mt-1 block w-full"
+                                        v-model="editForm.supplier" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <BreezeLabel for="brand" value="Brand"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="brand" type="text" class="mt-1 block w-full" v-model="editForm.brand"
                                         required />
                                 </div>
@@ -498,13 +528,15 @@ watch(
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="cost" value="Cost (₱)" />
+                                    <BreezeLabel for="cost" value="Cost (₱)"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="cost" type="number" class="mt-1 block w-full"
                                         v-model="editForm.cost" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <BreezeLabel for="price" value="Selling price (₱)" />
+                                    <BreezeLabel for="price" value="Selling price (₱)"
+                                        class="after:content-['*'] after:ml-1 after:text-red-500" />
                                     <BreezeInput id="price" type="number" class="mt-1 block w-full"
                                         v-model="editForm.price" />
                                 </div>

@@ -3,6 +3,7 @@
         <tr class="font-bold">
             <th>{{ $headDate }}</th>
             <th>Code</th>
+            <th>Supplier</th>
             <th>Brand</th>
             <th>Description</th>
             <th>Cost</th>
@@ -17,6 +18,7 @@
         <tr>
             <td></td>
             <td>{{ $sale->item['code'] }}</td>
+            <td>{{ $sale->item['supplier'] }}</td>
             <td>{{ $sale->item['brand'] }}</td>
             <td>{{ $sale->item['description'] }}</td>
             <td>{{ $sale->item['cost'] }}</td>
@@ -27,6 +29,7 @@
         </tr>
         @endforeach
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

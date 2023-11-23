@@ -255,6 +255,11 @@ var _hoisted_20 = {
   "class": "flex justify-between"
 };
 var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Storage link", -1 /* HOISTED */);
+var _hoisted_22 = {
+  key: 0,
+  "class": "flex justify-between mt-4"
+};
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Reset data", -1 /* HOISTED */);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _directive_wave = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("wave");
@@ -342,7 +347,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.$inertia.get(_ctx.route('storage.link'));
     }),
     "class": "rounded-lg px-4 text-sm text-white bg-gray-800 leading-none tracking-wide"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Link ")])), [[_directive_wave]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.success), 1 /* TEXT */)]);
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Link ")])), [[_directive_wave]])]), _ctx.$page.props.auth.user.name === 'Jonah' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    onClick: _cache[8] || (_cache[8] = function ($event) {
+      return _ctx.$inertia.get(_ctx.route('migrate.fresh'));
+    }),
+    "class": "rounded-lg px-4 text-sm text-white bg-gray-800 leading-none tracking-wide"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reset")])), [[_directive_wave]])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.success), 1 /* TEXT */)]);
 }
 
 /***/ }),

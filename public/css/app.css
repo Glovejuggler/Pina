@@ -825,6 +825,9 @@ select {
 .max-h-24 {
   max-height: 6rem;
 }
+.max-h-32 {
+  max-height: 8rem;
+}
 .max-h-64 {
   max-height: 16rem;
 }
@@ -1549,6 +1552,22 @@ select {
 .placeholder\:text-slate-400::placeholder {
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+
+.after\:ml-1::after {
+  content: var(--tw-content);
+  margin-left: 0.25rem;
+}
+
+.after\:text-red-500::after {
+  content: var(--tw-content);
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
+.after\:content-\[\'\*\'\]::after {
+  --tw-content: '*';
+  content: var(--tw-content);
 }
 
 .hover\:-translate-y-1:hover {

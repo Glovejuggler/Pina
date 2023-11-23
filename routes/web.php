@@ -76,6 +76,12 @@ Route::middleware(['auth'])->group(function () {
 
         return redirect()->back();
     })->name('storage.link');
+
+    Route::get('settings/reset/data', function () {
+        Artisan::call('migrate:fresh --seed');
+
+        return redirect()->back();
+    })->name('migrate.fresh');
 });
 
 require __DIR__.'/auth.php';

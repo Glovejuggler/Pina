@@ -43,6 +43,9 @@ const date = new Intl.DateTimeFormat('en-us', {
                                     Code
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Supplier
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Brand
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -68,6 +71,9 @@ const date = new Intl.DateTimeFormat('en-us', {
                                     {{ sale.item.code }}
                                 </th>
                                 <td class="px-6 py-4">
+                                    {{ sale.item.supplier }}
+                                </td>
+                                <td class="px-6 py-4">
                                     {{ sale.item.brand }}
                                 </td>
                                 <td class="px-6 py-4 max-w-md">
@@ -87,7 +93,7 @@ const date = new Intl.DateTimeFormat('en-us', {
                                 </td>
                             </tr>
                             <tr class="bg-white font-bold">
-                                <td colspan="5" class="text-center">
+                                <td colspan="6" class="text-center">
                                     Total
                                 </td>
                                 <td class="px-6">{{ currency.format(totalNet) }}</td>

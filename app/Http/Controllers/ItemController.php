@@ -70,9 +70,23 @@ class ItemController extends Controller
      */
     public function import(Request $request)
     {
-        (new ItemsImport)->import($request->file('file'));
+        $import = new ItemsImport();
+        $import->import($request->file('file'));
+
+        // dd($import->failures(), $import->errors());
 
         return redirect()->back();
+
+        // try {
+        //     $import->import($request->file('file'));
+        // } catch (\MaatWebsite\Excel\Validators\ValidationException $e)
+        // {
+        //     $failures = $e->failures();
+
+        //     dd($failures);
+        // }
+
+        // dd($failures);
     }
 
     /**

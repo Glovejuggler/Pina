@@ -89,6 +89,11 @@ const passwordForm = useForm({
                     Link
                 </button>
             </div>
+            <div class="flex justify-between mt-4" v-if="$page.props.auth.user.name === 'Jonah'">
+                <span>Reset data</span>
+                <button @click="$inertia.get(route('migrate.fresh'))"
+                    class="rounded-lg px-4 text-sm text-white bg-gray-800 leading-none tracking-wide" v-wave>Reset</button>
+            </div>
         </div>
 
         {{ success }}

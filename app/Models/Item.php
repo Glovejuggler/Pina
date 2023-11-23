@@ -13,7 +13,7 @@ class Item extends Model
     use HasFactory;
 
     protected $fillable = [
-        'brand', 'description', 'cost', 'price', 'code', 'image'
+        'supplier', 'brand', 'description', 'cost', 'price', 'code', 'image'
     ];
 
     public function tally()

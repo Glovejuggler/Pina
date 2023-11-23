@@ -21,6 +21,12 @@ const currency = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'PHP'
 })
+
+const date = new Intl.DateTimeFormat('en-us', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+})
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const currency = new Intl.NumberFormat('en-US', {
                 </div>
             </div>
 
-            <div class="bg-white border rounded-lg w-1/4 p-4">
+            <div class="bg-white border rounded-lg w-auto p-4">
                 <div class="font-bold">
                     Current Inventory
                 </div>
@@ -47,8 +53,10 @@ const currency = new Intl.NumberFormat('en-US', {
         </div>
         <div class="mt-4 flex justify-between w-1/4">
             <p class="font-bold text-lg">Sales</p>
-            <a v-if="dailyReport" :href="route('sales.export')"
-                class="rounded-full bg-green-600 px-4 py-2 text-white text-xs" v-wave>Generate report</a>
+            <button v-if="dailyReport" @click="$inertia.post(route('sales.view'), {
+                period: 'daily',
+                date: new Date().toISOString().slice(0, 10)
+            })" class="rounded-full bg-green-600 px-4 py-2 text-white text-xs" v-wave>Generate report</button>
         </div>
         <div class="flex space-x-2">
             <div class="bg-white border rounded-lg w-1/4 p-4 mt-4">
@@ -93,14 +101,20 @@ const currency = new Intl.NumberFormat('en-US', {
                     </button>
                 </form>
             </div>
-            <div v-if="item?.item" class="bg-white border rounded-lg w-1/4 p-4 mt-4 h-min">
-                <p class="font-bold">{{ item.item.brand }}</p>
-                <p class="text-sm">{{ item.item.description }}</p>
-                <span v-if="item?.item && sellForm.code" class="text-sm"
-                    :class="item?.item.tally.number < 1 ? 'text-red-500' : 'text-green-500'">
-                    Stocks left: {{ item?.item.tally.number }}</span>
-                <p>Price: <span class="font-bold">{{ currency.format(item.item.price) }}</span></p>
-                <p>Cost: <span class="font-bold">{{ currency.format(item.item.cost) }}</span></p>
+            <div v-if="item?.item" class="bg-white border rounded-lg w-auto p-4 mt-4 h-min flex space-x-2">
+                <img v-if="item.item.image" :src="`../storage/${item.item.image}`" class="max-h-32" alt="">
+                <div>
+                    <p class="font-bold">{{ item.item.brand }}</p>
+                    <p class="text-sm">{{ item.item.description }}</p>
+                    <span v-if="item?.item && sellForm.code" class="text-sm"
+                        :class="item?.item.tally.number < 1 ? 'text-red-500' : 'text-green-500'">
+                        Stocks left: {{ item?.item.tally.number }}</span>
+                    <p v-if="item.item.supplier">Supplier: <span class="font-bold">{{ item.item.supplier }}</span></p>
+                    <p>Price: <span class="font-bold">{{ currency.format(item.item.price) }}</span></p>
+                    <p>Cost: <span class="font-bold">{{ currency.format(item.item.cost) }}</span></p>
+                    <p class="text-xs">Date encoded: <span class="font-bold">{{ date.format(new Date(item.item.created_at))
+                    }}</span></p>
+                </div>
             </div>
         </div>
 

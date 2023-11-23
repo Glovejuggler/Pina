@@ -35,11 +35,12 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
         $item = Item::firstOrCreate([
             'code' => $row['code'],
         ], [
+            'supplier' => $row['supplier'],
             'brand' => $row['brand'],
             'description' => $row['description'],
             'cost' => $row['cost'],
             'price' => $row['selling_price'],
-            'created_at' => $row['date_encoded'] == null ? Carbon::now() : Carbon::parse($row['date_encoded']),
+            'created_at' => $row['date_encoded'] == null ? Carbon::now() : Carbon::createFromFormat('m-d-y',$row['date_encoded'])->startOfDay(),
         ]);
 
         $stock = $item->tally()->firstOrCreate([
@@ -56,39 +57,5 @@ class ItemsImport implements OnEachRow, WithHeadingRow, SkipsEmptyRows
                 'number' => $stock->number < 1 ? 0 : $stock->number - 1
             ]);
         }
-
-        // if (Item::where('code',$row['code'])->exists()) {
-        //     $item = Item::where('code',$row['code'])->first();
-
-        //     $item->update([
-        //         'brand' => $row['brand'],
-        //         'description' => $row['description'],
-        //         'cost' => $row['cost'],
-        //         'price' => $row['selling_price'],
-        //         'created_at' => $row['date_encoded'] ? Carbon::parse($row['date_encoded']) : $item->created_at,
-        //     ]);
-
-        //     $stock = $item->tally()->firstOrCreate([
-        //         'number' => $row['stock'] ? $row['stock'] : 1
-        //     ]);
-
-        //     if ($row['discount']) {
-        //         // something about checking if there is a sale of this item already
-        //         // if not then create the sale
-        //     }
-        // } else {
-        //     $item = Item::create([
-        //         'code' => $row['code'],
-        //         'brand' => $row['brand'],
-        //         'description' => $row['description'],
-        //         'cost' => $row['cost'],
-        //         'price' => $row['selling_price'],
-        //         'created_at' => $row['date_encoded'] ? Carbon::parse($row['date_encoded']) : $item->created_at,
-        //     ]);
-
-        //     $stock = $item->tally()->firstOrCreate([
-        //         'number' => $row['stock'] ? $row['stock'] : 1
-        //     ]);
-        // }
     }
 }
