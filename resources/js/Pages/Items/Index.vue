@@ -388,7 +388,7 @@ watch(
                                 showNewItemModal = true
                             }
                         },
-                        preserveState: true,
+                        preserveState: false,
                         preserveScroll: true,
                     })">
                         <div class="flex items-center">

@@ -913,7 +913,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 $setup.showNewItemModal = true;
               }
             },
-            preserveState: true,
+            preserveState: false,
             preserveScroll: true
           });
         }, ["prevent"]))

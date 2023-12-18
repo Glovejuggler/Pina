@@ -31,12 +31,14 @@ class ItemController extends Controller
             return $items;
         }
 
-        $latestCode = Item::orderBy('id', 'desc')->first()->code;
+        $latestCode = Item::orderBy('id', 'desc')->first()?->code;
         if ($latestCode) {
             preg_match('/^([A-Za-z]+)([0-9]+)([A-Za-z]*)$/', $latestCode, $matches);
             $nextNumber = (int)$matches[2] + 1;
             $nextCode = $matches[1].$nextNumber.$matches[3];
             // dd($latestCode,$matches,$nextCode);
+        } else {
+            $nextCode = null;
         }
 
         return inertia('Items/Index', [
