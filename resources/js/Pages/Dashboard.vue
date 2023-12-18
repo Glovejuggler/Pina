@@ -60,8 +60,10 @@ const date = new Intl.DateTimeFormat('en-us', {
                     Current Inventory
                 </div>
                 <div class="flex justify-end font-bold text-7xl">
-                    <p v-if="current_inventory">{{ current_inventory.toLocaleString() }}</p>
-                    <div v-else class="bg-slate-300 h-[4.5rem] w-56 rounded-lg animate-pulse"></div>
+                    <p v-if="current_inventory >= 0" :class="{ 'hidden': current_inventory === null }">{{
+                        Number(current_inventory).toLocaleString() }}</p>
+                    <div v-if="current_inventory === null" class="bg-slate-300 h-[4.5rem] w-56 rounded-lg animate-pulse">
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,6 +82,7 @@ const date = new Intl.DateTimeFormat('en-us', {
                     onSuccess: () => {
                         sellForm.reset('code', 'priceSold')
                         sellForm.code = ''
+                        fetchInventory()
                     }
                 })">
                     <div class="flex justify-between">
@@ -95,14 +98,16 @@ const date = new Intl.DateTimeFormat('en-us', {
                             } else {
                                 item = null
                             }
-                        }" id="code" type="text" class="mt-1 block w-full" v-model="sellForm.code" required />
+                        }
+                            " id="code" type="text" class="mt-1 block w-full" v-model="sellForm.code" required />
                         <span v-if="errors.item" class="text-red-500 text-sm">{{ errors.item }}</span>
                     </div>
                     <div class="mt-4">
                         <BreezeLabel for="price" value="Price sold" />
                         <BreezeInput id="price" type="number" class="mt-1 block w-full" v-model="sellForm.priceSold"
                             required />
-                        <span v-if="sellForm.priceSold > item?.item?.price" class="text-red-500 text-sm">Higher than item's
+                        <span v-if="sellForm.priceSold > item?.item?.price" class="text-red-500 text-sm">Higher than
+                            item's
                             selling price</span>
                     </div>
                     <button :disabled="!item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold"
