@@ -30,6 +30,16 @@ class Item extends Model
                         ->orWhere('description','like','%'.$search.'%')
                         ->orWhere(DB::raw("brand || ' ' || description"), 'like', '%'.$search.'%');
             });
+        })->when($filters['sorter'] ?? null, function ($query, $sorter) {
+            if ($sorter == 'sold') {
+                $query->whereHas('tally', function ($q) {
+                    $q->where('number',0);
+                });
+            } elseif ($sorter == 'unsold') {
+                $query->whereHas('tally', function ($q) {
+                    $q->where('number','>',0);
+                });
+            }
         });
     }
 }

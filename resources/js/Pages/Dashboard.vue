@@ -2,13 +2,26 @@
 import BreezeLabel from '@/Components/Label.vue';
 import BreezeInput from '@/Components/Input.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
+import { onMounted } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     items: Number,
-    current_inventory: Number,
     errors: Object,
     dailyReport: Boolean,
     item: Object
+})
+
+const current_inventory = ref(null)
+
+const fetchInventory = async () => {
+    const response = await axios.get('/inventory')
+    current_inventory.value = response.data
+}
+
+onMounted(() => {
+    fetchInventory()
 })
 
 const sellForm = useForm({
@@ -38,7 +51,7 @@ const date = new Intl.DateTimeFormat('en-us', {
                     Items
                 </div>
                 <div class="flex justify-end font-bold text-7xl">
-                    {{ items }}
+                    {{ items.toLocaleString() }}
                 </div>
             </div>
 
@@ -47,7 +60,8 @@ const date = new Intl.DateTimeFormat('en-us', {
                     Current Inventory
                 </div>
                 <div class="flex justify-end font-bold text-7xl">
-                    {{ current_inventory.toLocaleString() }}
+                    <p v-if="current_inventory">{{ current_inventory.toLocaleString() }}</p>
+                    <div v-else class="bg-slate-300 h-[4.5rem] w-56 rounded-lg animate-pulse"></div>
                 </div>
             </div>
         </div>
@@ -70,9 +84,6 @@ const date = new Intl.DateTimeFormat('en-us', {
                 })">
                     <div class="flex justify-between">
                         <p class="font-bold">Sell</p>
-                        <!-- <button @click="$inertia.get(route('batch.sell'))" type="button"
-                        class="bg-gray-800 px-4 rounded-full text-xs text-white" v-wave>Batch
-                        sell</button> -->
                         <input type="date" v-model="sellForm.date" class="text-xs rounded-full border-gray-300">
                     </div>
                     <div class="mt-4">

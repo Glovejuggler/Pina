@@ -22,6 +22,7 @@ const props = defineProps({
     items: Object,
     errors: Object,
     filters: Object,
+    nextCode: String,
 })
 
 const newform = useForm({
@@ -31,7 +32,7 @@ const newform = useForm({
     description: '',
     cost: '',
     price: '',
-    code: '',
+    code: props.nextCode,
 })
 
 const editForm = useForm({
@@ -124,7 +125,8 @@ const itemSell = (item) => {
 }
 
 const form = ref({
-    search: props.filters.search
+    search: props.filters.search,
+    sorter: props.filters.sorter ?? '',
 })
 
 const currency = new Intl.NumberFormat('en-US', {
@@ -205,13 +207,20 @@ watch(
             <span class="font-bold text-lg">Items<i @click="toggleView"
                     class="bx ml-3 hover:bg-black/20 h-8 w-8 inline-flex justify-center items-center rounded-full text-xl cursor-pointer"
                     :class="view === 'list' ? 'bx-list-ul' : 'bxs-card'"></i></span>
-            <div>
+            <div class="flex space-x-2">
                 <label class="relative block">
                     <i class='bx bx-search dark:text-white/20 absolute inset-y-0 left-0 flex items-center pl-3'></i>
                     <input v-model="form.search"
                         class="duration-300 ease-in-out placeholder:italic placeholder:text-slate-400 dark:placeholder:text-gray-500 dark:text-white/80 block bg-white dark:bg-zinc-900 w-96 border-slate-300 dark:border-slate-300/20 rounded-md py-2 pl-9 pr-3 shadow-sm focus:border-indigo-300 focus:ring-indigo-200 focus:ring focus:ring-opacity-50 sm:text-sm"
                         placeholder="Search..." type="text" name="search" />
                 </label>
+                <select
+                    class="duration-300 ease-in-out placeholder:italic placeholder:text-slate-400 dark:placeholder:text-gray-500 dark:text-white/80 block bg-white dark:bg-zinc-900 border-slate-300 dark:border-slate-300/20 rounded-md shadow-sm focus:border-indigo-300 focus:ring-indigo-200 focus:ring focus:ring-opacity-50 sm:text-sm"
+                    id="sort" name="sort" v-model="form.sorter">
+                    <option value="">All</option>
+                    <option value="sold">Sold/No stocks</option>
+                    <option value="unsold">Unsold</option>
+                </select>
             </div>
             <div>
                 <button @click="showNewItemModal = true" class="rounded-full px-4 py-2 bg-gray-800 text-white text-xs"

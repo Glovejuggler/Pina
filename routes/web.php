@@ -31,14 +31,12 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/inventory', [ItemController::class, 'inventory'])->name('item.inventory');
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
         'items' => Item::with('tally')->get()->sum(function($q) {
             return $q->tally->number;
         }),
-        'current_inventory' => Item::with('tally')->get()->sum(function($q) {
-                                        return $q->cost * $q->tally->number;
-                                    }),
         'dailyReport' => Sale::whereDate('created_at',now())->exists()
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');

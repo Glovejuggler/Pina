@@ -21,7 +21,7 @@ class ItemController extends Controller
     {
         $items = Item::query()
                 ->with('tally')
-                ->filter($request->only(['search']))
+                ->filter($request->only(['search', 'sorter']))
                 // ->select('code', 'name', 'description', 'price', DB::raw('COUNT(*) as count'))
                 // ->groupBy('code', 'name', 'description', 'price')
                 ->paginate(10)
@@ -31,9 +31,18 @@ class ItemController extends Controller
             return $items;
         }
 
+        $latestCode = Item::orderBy('id', 'desc')->first()->code;
+        if ($latestCode) {
+            preg_match('/^([A-Za-z]+)([0-9]+)([A-Za-z]*)$/', $latestCode, $matches);
+            $nextNumber = (int)$matches[2] + 1;
+            $nextCode = $matches[1].$nextNumber.$matches[3];
+            // dd($latestCode,$matches,$nextCode);
+        }
+
         return inertia('Items/Index', [
             'items' => $items,
             'filters' => $request->only(['search']),
+            'nextCode' => $nextCode,
         ]);
     }
 
@@ -185,5 +194,16 @@ class ItemController extends Controller
         $item->delete();
 
         return redirect()->back();
+    }
+
+    public function inventory(Request $request)
+    {
+        if ($request->wantsJson()) {
+            $currentInventory = Item::with('tally')->get()->sum(function($q) {
+                                    return $q->cost * $q->tally->number;
+                                });
+                                
+            return $currentInventory;
+        }
     }
 }
