@@ -209,6 +209,7 @@ class SaleController extends Controller
 
     /**
      * Batch selling of items
+     * Not used
      */
     public function batchSell(Request $request)
     {
@@ -288,7 +289,18 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        //
+        // dd($sale->item['price'], $request->priceSold);
+        $request->validate([
+            'priceSold' => 'required',
+            'dateSold' => 'required'
+        ]);
+
+        $sale->update([
+            'discount' => $sale->item['price'] - $request->priceSold,
+            'created_at' => Carbon::parse($request->dateSold),
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -299,6 +311,8 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
-        //
+        $sale->delete();
+
+        return redirect()->back();
     }
 }

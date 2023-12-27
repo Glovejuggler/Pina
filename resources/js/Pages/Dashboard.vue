@@ -110,8 +110,9 @@ const date = new Intl.DateTimeFormat('en-us', {
                             item's
                             selling price</span>
                     </div>
-                    <button :disabled="!item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold"
-                        :class="{ 'opacity-25': !item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold }"
+                    <button
+                        :disabled="!item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold || sellForm.processing"
+                        :class="{ 'opacity-25': !item || item?.item?.tally.number < 1 || errors.item || !sellForm.priceSold || sellForm.processing }"
                         class="px-4 py-2 mt-4 w-full text-xs bg-gray-800 rounded-lg text-white" v-wave>
                         Save
                     </button>
