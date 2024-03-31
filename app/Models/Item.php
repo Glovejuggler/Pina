@@ -16,6 +16,11 @@ class Item extends Model
         'supplier', 'brand', 'description', 'cost', 'price', 'code', 'image'
     ];
 
+    public function setCodeAttribute($value)
+    {
+        $this->attributes['code'] = preg_replace('/\s+/', '', $value);
+    }
+
     public function tally()
     {
         return $this->hasOne(Tally::class);

@@ -32,7 +32,9 @@ class ItemController extends Controller
         }
 
         $latestCode = Item::orderBy('id', 'desc')->first()?->code;
+        // dd(preg_replace('/\s+/', '', $latestCode));
         if ($latestCode) {
+            $latestCode = preg_replace('/\s+/', '', $latestCode);
             preg_match('/^([A-Za-z]+)([0-9]+)([A-Za-z]*)$/', $latestCode, $matches);
             $nextNumber = (int)$matches[2] + 1;
             $nextCode = $matches[1].$nextNumber.$matches[3];
